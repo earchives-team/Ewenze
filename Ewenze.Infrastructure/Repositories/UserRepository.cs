@@ -1,5 +1,7 @@
 ﻿using Ewenze.Domain.Entities;
 using Ewenze.Domain.Repositories;
+using Ewenze.Infrastructure.DatabaseContext;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +12,26 @@ namespace Ewenze.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public Task<User> GetUserByEmailAsync(string email)
+        private readonly EWenzeDbContext _eWenzeDbContext;
+
+        public UserRepository(EWenzeDbContext eWenzeDbContext)
         {
-            throw new NotImplementedException();
+            this._eWenzeDbContext = eWenzeDbContext;
         }
 
-        public Task<User> GetUserById(int id)
+        public async Task<User?> GetUserByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            return await _eWenzeDbContext.Users.FirstOrDefaultAsync(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
 
-        public Task<IEnumerable<User>> GetUsersAsync()
+        public async Task<User?> GetUserById(int id)
         {
-            throw new NotImplementedException();
+            return await _eWenzeDbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<User>> GetUsersAsync()
+        {
+            return await _eWenzeDbContext.Users.ToListAsync();
         }
     }
 }

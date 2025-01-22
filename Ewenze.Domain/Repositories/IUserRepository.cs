@@ -10,7 +10,7 @@ namespace Ewenze.Domain.Repositories
     public interface IUserRepository
     {
         Task<IEnumerable<User>> GetUsersAsync(); 
-        Task<User> GetUserByEmailAsync(string email);
-        Task<User> GetUserById(int id);
+        Task<User?> GetUserByEmailAsync(string email);
+        Task<User?> GetUserById(int id);
     }
 }

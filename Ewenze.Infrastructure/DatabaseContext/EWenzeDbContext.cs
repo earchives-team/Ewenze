@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ewenze.Infrastructure.DatabaseContext
 {
-    internal class EWenzeDbContext : DbContext
+    public class EWenzeDbContext : DbContext
     {
         public EWenzeDbContext(DbContextOptions<EWenzeDbContext> options) : base(options) { }
 
