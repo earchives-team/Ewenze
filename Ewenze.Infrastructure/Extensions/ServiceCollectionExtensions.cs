@@ -1,5 +1,7 @@
 ﻿
+using Ewenze.Domain.Repositories;
 using Ewenze.Infrastructure.DatabaseContext;
+using Ewenze.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,9 @@ namespace Ewenze.Infrastructure.Extensions
             {
                 options.UseMySQL(configuration.GetConnectionString("EWenze")!);
             });
+
+
+            services.AddTransient<IUserRepository, UserRepository>();
 
             return services;
         }
