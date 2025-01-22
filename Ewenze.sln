@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewenze.Application", "Ewenz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewenze.Infrastructure", "Ewenze.Infrastructure\Ewenze.Infrastructure.csproj", "{94965A4C-5F79-4A15-B123-C05AF422094F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewenze.API", "Ewenze.API\Ewenze.API.csproj", "{FC810897-CECF-4F05-ADBE-ABBF0BD7805E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{94965A4C-5F79-4A15-B123-C05AF422094F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94965A4C-5F79-4A15-B123-C05AF422094F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94965A4C-5F79-4A15-B123-C05AF422094F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC810897-CECF-4F05-ADBE-ABBF0BD7805E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC810897-CECF-4F05-ADBE-ABBF0BD7805E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC810897-CECF-4F05-ADBE-ABBF0BD7805E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC810897-CECF-4F05-ADBE-ABBF0BD7805E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +43,7 @@ Global
 		{5437F193-A1E0-44A5-AC63-EEB2ACADF471} = {145A7758-32B4-4BFE-9EAB-90F166910146}
 		{0884F5BA-5D88-4BEF-B1F7-50F3AEEF0D0C} = {145A7758-32B4-4BFE-9EAB-90F166910146}
 		{94965A4C-5F79-4A15-B123-C05AF422094F} = {145A7758-32B4-4BFE-9EAB-90F166910146}
+		{FC810897-CECF-4F05-ADBE-ABBF0BD7805E} = {145A7758-32B4-4BFE-9EAB-90F166910146}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7D45A213-CA6B-4FBF-8037-DBD4BC90FD92}

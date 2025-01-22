@@ -1,0 +1,6 @@
+@Ewenze.API_HostAddress = http://localhost:5217
+
+GET {{Ewenze.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
