@@ -1,4 +1,5 @@
 ﻿using Ewenze.Application.Features.UserFeature.Queries.GetUserByEmail;
+using Ewenze.Application.Features.UserFeature.Queries.GetUserById;
 using Ewenze.Application.Features.UserFeature.Queries.GetUsers;
 using Ewenze.Domain.Entities;
 using MediatR;
@@ -10,18 +11,18 @@ namespace Ewenze.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         public UserController(IMediator mediator)
         {
-            this.mediator = mediator;
+            this._mediator = mediator;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<User>), 200)]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok( await mediator.Send(new GetUsersQuery()));
+            return Ok( await _mediator.Send(new GetUsersQuery()));
         }
 
         [HttpGet]
@@ -29,7 +30,14 @@ namespace Ewenze.API.Controllers
         [Route("GetByEmail")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
-            return Ok(await mediator.Send(new GetUserByEmailQuery(email)));
+            return Ok(await _mediator.Send(new GetUserByEmailQuery(email)));
+        }
+
+        [HttpGet]
+        [Route("GetById/{id}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            return Ok(await _mediator.Send(new GetUserByIdQuery(id))); 
         }
     }
 }
