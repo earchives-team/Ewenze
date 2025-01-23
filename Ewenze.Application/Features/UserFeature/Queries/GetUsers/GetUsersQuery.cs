@@ -19,7 +19,7 @@ namespace Ewenze.Application.Features.UserFeature.Queries.GetUsers
         {
             var allUsers = await UserRepository.GetUsersAsync();
 
-            return allUsers!;
+            return allUsers;
         }
     }
 }

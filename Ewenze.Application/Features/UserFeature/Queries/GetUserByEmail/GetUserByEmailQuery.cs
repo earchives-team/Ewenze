@@ -1,11 +1,7 @@
 ﻿using Ewenze.Domain.Entities;
+using Ewenze.Domain.Exceptions;
 using Ewenze.Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ewenze.Application.Features.UserFeature.Queries.GetUserByEmail
 {
@@ -22,12 +18,14 @@ namespace Ewenze.Application.Features.UserFeature.Queries.GetUserByEmail
 
         public async Task<User> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
         {
-            var singleUser = await UserRepository.GetUserByEmailAsync(request.email);
+            var user = await UserRepository.GetUserByEmailAsync(request.email);
 
-            // Must implement The exceptions when No User  etc
-            //For now assume the user exist 
+            if(user == null)
+            {
+                throw new NotFoundException(nameof(user), request.email);
+            }
 
-            return singleUser!;
+            return user;
         }
     }
 }
