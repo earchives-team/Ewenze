@@ -1,3 +1,4 @@
+using Ewenze.API.Middleware;
 using Ewenze.Application.Extensions;
 using Ewenze.Infrastructure.Extensions; 
 
@@ -16,6 +17,8 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
+
+app.UseExceptionMiddleware();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
