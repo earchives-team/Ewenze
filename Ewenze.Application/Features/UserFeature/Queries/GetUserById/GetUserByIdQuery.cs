@@ -1,4 +1,5 @@
 ﻿using Ewenze.Domain.Entities;
+using Ewenze.Domain.Exceptions;
 using Ewenze.Domain.Repositories;
 using MediatR;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Ewenze.Application.Features.UserFeature.Queries.GetUserById
 {
-    public record class GetUserByIdQuery(int id) : IRequest<User>;
+    public record class GetUserByIdQuery(int Id) : IRequest<User>;
 
 
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
@@ -23,10 +24,12 @@ namespace Ewenze.Application.Features.UserFeature.Queries.GetUserById
 
         public async Task<User> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var currentUser = await _userRepository.GetUserById(request.id);
-
-            // Must Had Validation and throw error 
+            var currentUser = await _userRepository.GetUserById(request.Id);
             
+            if (currentUser == null)
+            {
+                throw new NotFoundException(nameof(currentUser), request.Id);
+            }
 
             return currentUser!; 
         }
