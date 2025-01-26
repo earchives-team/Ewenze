@@ -9,7 +9,7 @@ namespace Ewenze.Application.Features.UserFeature.Queries.GetUserByEmail
 {
     public record class GetUserByEmailQuery(string email) : IRequest<UserDto>;
 
-    internal class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQuery, UserDto>
+    public class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQuery, UserDto>
     {
         private IUserRepository UserRepository;
         private IMapper _mapper;
