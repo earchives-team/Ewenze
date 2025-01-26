@@ -1,4 +1,5 @@
-﻿using Ewenze.Application.Features.UserFeature.Queries.GetUserByEmail;
+﻿using Ewenze.Application.Features.UserFeature.Dto;
+using Ewenze.Application.Features.UserFeature.Queries.GetUserByEmail;
 using Ewenze.Application.Features.UserFeature.Queries.GetUserById;
 using Ewenze.Application.Features.UserFeature.Queries.GetUsers;
 using Ewenze.Domain.Entities;
@@ -19,14 +20,14 @@ namespace Ewenze.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<User>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
         public async Task<IActionResult> GetUsers()
         {
             return Ok( await _mediator.Send(new GetUsersQuery()));
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(User),200)]
+        [ProducesResponseType(typeof(UserDto),200)]
         [Route("GetByEmail")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {

@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace Ewenze.Application.Extensions
@@ -11,6 +12,12 @@ namespace Ewenze.Application.Extensions
             var applicationAssembly = typeof(ServiceCollectionExtension).Assembly;
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(applicationAssembly));
+
+            services.AddAutoMapper(applicationAssembly);
+
+            services.AddValidatorsFromAssembly(applicationAssembly)
+                .AddFluentValidationAutoValidation();
+
 
             return services;
         }
