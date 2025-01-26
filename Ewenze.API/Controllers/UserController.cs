@@ -21,6 +21,7 @@ namespace Ewenze.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
+        [Route("GetAllUsers")]
         public async Task<IActionResult> GetUsers()
         {
             return Ok( await _mediator.Send(new GetUsersQuery()));
