@@ -20,13 +20,15 @@ namespace Ewenze.UnitTests.Application.Features.UserTest
     {
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly GetUserByEmailQueryHandler _handler;
+        private readonly GetUserByEmailQueryHandler _getUserByEmailHandler;
+        private readonly GetUserByIdQueryHandler _getUserByIdHandler;
 
         public GetUserByEmailQueryHandlerTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
             _mapperMock = new Mock<IMapper>();
-            _handler = new GetUserByEmailQueryHandler(_userRepositoryMock.Object, _mapperMock.Object);
+            _getUserByEmailHandler = new GetUserByEmailQueryHandler(_userRepositoryMock.Object, _mapperMock.Object);
+            _getUserByIdHandler = new GetUserByIdQueryHandler(_userRepositoryMock.Object, _mapperMock.Object);
         }
 
         [Fact]
@@ -45,7 +47,7 @@ namespace Ewenze.UnitTests.Application.Features.UserTest
             var query = new GetUserByEmailQuery(email);
 
             // Act
-            var result = await _handler.Handle(query, CancellationToken.None);
+            var result = await _getUserByEmailHandler.Handle(query, CancellationToken.None);
 
             // Assert
             Assert.NotNull(result);
@@ -67,10 +69,55 @@ namespace Ewenze.UnitTests.Application.Features.UserTest
             var query = new GetUserByEmailQuery(email);
 
             // Act & Assert
-            await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(query, CancellationToken.None));
+            await Assert.ThrowsAsync<NotFoundException>(() => _getUserByEmailHandler.Handle(query, CancellationToken.None));
 
             _userRepositoryMock.Verify(repo => repo.GetUserByEmailAsync(email), Times.Once);
             _mapperMock.Verify(mapper => mapper.Map<UserDto>(It.IsAny<User>()), Times.Never);
         }
+
+        [Fact]
+        public async Task Handle_UserExistsById_ReturnsUserDto()
+        {
+            // Arrange
+            var userId = 1;
+            var user = new User { Id = userId, Email = "test@example.com" };
+            var userDto = new UserDto { Id = userId, Email = "test@example.com" };
+
+            _userRepositoryMock.Setup(repo => repo.GetUserById(userId))
+                .ReturnsAsync(user);
+            _mapperMock.Setup(mapper => mapper.Map<UserDto>(user))
+                .Returns(userDto);
+
+            var query = new GetUserByIdQuery(userId);
+
+            // Act
+            var result = await _getUserByIdHandler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(userId, result.Id);
+            Assert.Equal(user.Email, result.Email);
+
+            _userRepositoryMock.Verify(repo => repo.GetUserById(userId), Times.Once);
+            _mapperMock.Verify(mapper => mapper.Map<UserDto>(user), Times.Once);
+        }
+        [Fact]
+        public async Task Handle_UserDoesNotExistById_ThrowsNotFoundException()
+        {
+            // Arrange
+            var userId = 42;
+
+            _userRepositoryMock.Setup(repo => repo.GetUserById(userId))
+                .ReturnsAsync((User)null);
+
+            var query = new GetUserByIdQuery(userId);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NotFoundException>(() => _getUserByIdHandler.Handle(query, CancellationToken.None));
+
+            _userRepositoryMock.Verify(repo => repo.GetUserById(userId), Times.Once);
+            _mapperMock.Verify(mapper => mapper.Map<UserDto>(It.IsAny<User>()), Times.Never);
+        }
+
     }
 }
