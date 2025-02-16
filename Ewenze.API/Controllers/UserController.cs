@@ -5,12 +5,14 @@ using Ewenze.Application.Features.UserFeature.Queries.GetUserById;
 using Ewenze.Application.Features.UserFeature.Queries.GetUsers;
 using Ewenze.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ewenze.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // Seuls les utilisateurs authentifiés peuvent accéder
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
