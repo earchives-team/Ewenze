@@ -12,5 +12,8 @@ namespace Ewenze.Domain.Repositories
         Task<IEnumerable<User>> GetUsersAsync(); 
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> GetUserById(int id);
+        Task CreateUser(User user); 
+        Task UpdateUser(User user);
+        Task DeleteUser(int id);
     }
 }

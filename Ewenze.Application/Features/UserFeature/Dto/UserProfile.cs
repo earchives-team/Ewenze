@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ewenze.Application.Features.UserFeature.Commands.CreateUser;
 using Ewenze.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,10 @@ namespace Ewenze.Application.Features.UserFeature.Dto
         public UserProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
+
+            CreateMap<CreateUserCommand, User>()
+                .ForMember(u => u.NiceName, opt => 
+                 opt.MapFrom(src => src.Name)); 
         }
     }
 }

@@ -19,6 +19,17 @@ namespace Ewenze.Infrastructure.Repositories
             this._eWenzeDbContext = eWenzeDbContext;
         }
 
+        public async Task CreateUser(User user)
+        {
+            await _eWenzeDbContext.AddAsync(user);
+            await _eWenzeDbContext.SaveChangesAsync();
+        }
+
+        public Task DeleteUser(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _eWenzeDbContext.Users.FirstOrDefaultAsync(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
@@ -32,6 +43,11 @@ namespace Ewenze.Infrastructure.Repositories
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return await _eWenzeDbContext.Users.ToListAsync();
+        }
+
+        public Task UpdateUser(User user)
+        {
+            throw new NotImplementedException();
         }
     }
 }
