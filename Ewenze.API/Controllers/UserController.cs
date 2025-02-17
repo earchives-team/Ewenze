@@ -48,7 +48,7 @@ namespace Ewenze.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Post(CreateUserCommand userCommand)
+        public async Task<ActionResult> Create(CreateUserCommand userCommand)
         {
             var response = await _mediator.Send(userCommand);
 
