@@ -46,6 +46,7 @@ namespace Ewenze.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous] // Cette action est accessible sans authentification
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Create(CreateUserCommand userCommand)
