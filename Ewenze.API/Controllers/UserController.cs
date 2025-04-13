@@ -12,7 +12,7 @@ namespace Ewenze.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // Seuls les utilisateurs authentifiés peuvent accéder
+   // [Authorize] // Seuls les utilisateurs authentifiés peuvent accéder
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
