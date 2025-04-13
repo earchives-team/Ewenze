@@ -21,6 +21,7 @@ var app = builder.Build();
 app.UseExceptionMiddleware();
 
 // Configure the HTTP request pipeline.
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
