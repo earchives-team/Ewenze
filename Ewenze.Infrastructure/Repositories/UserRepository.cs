@@ -45,6 +45,14 @@ namespace Ewenze.Infrastructure.Repositories
             return await _eWenzeDbContext.Users.ToListAsync();
         }
 
+        public async Task<User?> GetUserByUsernameOrEmail(string value)
+        {
+            return await _eWenzeDbContext.Users
+                .FirstOrDefaultAsync(x =>
+                                    x.LoginName.Equals(value, StringComparison.OrdinalIgnoreCase) ||
+                                    x.Email.Equals(value, StringComparison.OrdinalIgnoreCase));
+        }
+
         public Task UpdateUser(User user)
         {
             throw new NotImplementedException();

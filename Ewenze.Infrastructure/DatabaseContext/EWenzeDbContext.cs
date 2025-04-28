@@ -18,7 +18,7 @@ namespace Ewenze.Infrastructure.DatabaseContext
             {
                 entity.ToTable("wpu0_users");
                 entity.Property(e => e.Id).HasColumnType("bigint unsigned").IsRequired();
-                entity.Property(e => e.Login).HasColumnType("varchar(60)").IsRequired().HasDefaultValue("");
+                entity.Property(e => e.LoginName).HasColumnType("varchar(60)").IsRequired().HasDefaultValue("");
                 entity.Property(e => e.Password).HasColumnType("varchar(255)").IsRequired().HasDefaultValue("");
                 entity.Property(e => e.NiceName).HasColumnType("varchar(50)").IsRequired().HasDefaultValue("");
                 entity.Property(e => e.Email).HasColumnType("varchar(100)").IsRequired().HasDefaultValue("");

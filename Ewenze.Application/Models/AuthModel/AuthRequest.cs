@@ -8,7 +8,10 @@ namespace Ewenze.Application.Models.AuthModel
 {
     public class AuthRequest
     {
-        public string Email { get; set; }
+        /// <summary>
+        /// Represent The Email or the Password to authenticate the user 
+        /// </summary>
+        public string? LoginInformation { get; set; }
         public string Password { get; set; }
     }
 }

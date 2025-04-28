@@ -33,7 +33,12 @@ namespace Ewenze.Infrastructure.Services
 
         public async Task<AuthResponse> Login(AuthRequest request)
         {
-            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+            
+            if(request.LoginInformation == null)
+                throw new UnauthorizedAccessException("Email or password are incorrect");
+            
+            // The user can Login with the email or username 
+            var user = await _userRepository.GetUserByEmailAsync(request.LoginInformation);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
@@ -47,7 +52,7 @@ namespace Ewenze.Infrastructure.Services
                 Id = user.Id,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Email = user.Email,
-                UserName = user.Login
+                UserName = user.LoginName
             };
 
             return response;
@@ -57,7 +62,7 @@ namespace Ewenze.Infrastructure.Services
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Login),
+                new Claim(JwtRegisteredClaimNames.Sub, user.LoginName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };

@@ -18,7 +18,7 @@ namespace Ewenze.Domain.Entities
         [Column("user_login")]
         [Required]
         [MaxLength(60)]
-        public string Login { get; set; }
+        public string LoginName { get; set; }
 
         [Column("user_pass")]
         [Required]
