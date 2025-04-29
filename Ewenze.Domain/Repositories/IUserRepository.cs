@@ -13,7 +13,8 @@ namespace Ewenze.Domain.Repositories
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> GetUserById(int id);
         Task<User?> GetUserByUsernameOrEmail(string username);
-        Task CreateUserMetadata(IEnumerable<UserMeta> users);
+        Task CreateUserMetadataAsync(IEnumerable<UserMeta> users);
+        Task<Dictionary<string,string?>> GetUserMetaDictionnaryAsync(int userId, List<string> metaKeys);
         Task<User> CreateUser(User user); 
         Task UpdateUser(User user);
         Task DeleteUser(int id);

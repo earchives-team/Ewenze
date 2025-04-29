@@ -67,7 +67,7 @@ namespace Ewenze.Application.Features.UserFeature.Commands.CreateUser
                     }
                 };
 
-                await _userRepository.CreateUserMetadata(metaInfoList);
+                await _userRepository.CreateUserMetadataAsync(metaInfoList);
             }
 
             return mappedUser.Id;

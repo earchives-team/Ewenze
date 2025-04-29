@@ -59,10 +59,19 @@ namespace Ewenze.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task CreateUserMetadata(IEnumerable<UserMeta> userMetas)
+        public async Task CreateUserMetadataAsync(IEnumerable<UserMeta> userMetas)
         {
             await _eWenzeDbContext.UserMetas.AddRangeAsync(userMetas);
             await _eWenzeDbContext.SaveChangesAsync();
+        }
+
+        public async Task<Dictionary<string, string?>> GetUserMetaDictionnaryAsync(int userId, List<string> metaKeys)
+        {
+            var metas = await _eWenzeDbContext.UserMetas
+                         .Where(m => m.UserId == userId && metaKeys.Contains(m.MetaKey))
+                         .ToListAsync();
+
+            return metas.ToDictionary(m => m.MetaKey, m => m.MetaValue);
         }
     }
 }
