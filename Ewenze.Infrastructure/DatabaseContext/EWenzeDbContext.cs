@@ -8,6 +8,7 @@ namespace Ewenze.Infrastructure.DatabaseContext
         public EWenzeDbContext(DbContextOptions<EWenzeDbContext> options) : base(options) { }
 
         public virtual DbSet<User>  Users { get; set; }
+        public virtual DbSet<UserMeta> UserMetas { get; set; }  
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,15 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 entity.Property(e => e.UserStatus).HasColumnType("int").IsRequired().HasDefaultValue(0);
                 entity.Property(e => e.DisplayName).HasColumnType("varchar(250)").IsRequired().HasDefaultValue("");
             });
+
+            modelBuilder.Entity<UserMeta>(entity =>
+            {
+                entity.ToTable("wpu0_usermeta");
+                entity.Property(e => e.Id).HasColumnType("bigint unsigned").IsRequired();
+                entity.Property(e => e.UserId).HasColumnType("int").IsRequired();
+                entity.Property(e => e.MetaKey).HasColumnType("varchar(255)").IsRequired();
+                entity.Property(e => e.MetaValue).HasColumnType("varchar(255)");
+            }); 
         }
     }
 }

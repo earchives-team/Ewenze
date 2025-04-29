@@ -9,7 +9,17 @@ namespace Ewenze.Application.Features.UserFeature.Commands.CreateUser
 
         public CreateUserCommandValidator(IUserRepository userRepository)
         {
-            RuleFor(u => u.Name)
+            RuleFor(u => u.LastName)
+                .NotEmpty().WithMessage("{PropertyName} is required")
+                .NotNull()
+                .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");
+
+            RuleFor(u => u.FirstName)
+                .NotEmpty().WithMessage("{PropertyName} is required")
+                .NotNull()
+                .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");
+
+            RuleFor(u => u.PhoneNumber)
                 .NotEmpty().WithMessage("{PropertyName} is required")
                 .NotNull()
                 .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");

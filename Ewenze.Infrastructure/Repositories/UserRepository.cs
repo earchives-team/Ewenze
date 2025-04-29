@@ -19,10 +19,11 @@ namespace Ewenze.Infrastructure.Repositories
             this._eWenzeDbContext = eWenzeDbContext;
         }
 
-        public async Task CreateUser(User user)
+        public async Task<User> CreateUser(User user)
         {
             await _eWenzeDbContext.AddAsync(user);
             await _eWenzeDbContext.SaveChangesAsync();
+            return user;
         }
 
         public Task DeleteUser(int id)
@@ -56,6 +57,12 @@ namespace Ewenze.Infrastructure.Repositories
         public Task UpdateUser(User user)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task CreateUserMetadata(IEnumerable<UserMeta> userMetas)
+        {
+            await _eWenzeDbContext.UserMetas.AddRangeAsync(userMetas);
+            await _eWenzeDbContext.SaveChangesAsync();
         }
     }
 }

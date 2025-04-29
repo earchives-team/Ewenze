@@ -16,8 +16,9 @@ namespace Ewenze.Application.Features.UserFeature.Dto
             CreateMap<User, UserDto>().ReverseMap();
 
             CreateMap<CreateUserCommand, User>()
-                .ForMember(u => u.NiceName, opt => 
-                 opt.MapFrom(src => src.Name)); 
+                .ForMember(u => u.NiceName, opt => opt.MapFrom(src => src.UserName))
+                .ForMember(u => u.DisplayName, opt => opt.MapFrom(src => src.UserName))
+                .ForMember(u => u.LoginName, opt => opt.MapFrom(src => src.UserName));
         }
     }
 }
