@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Ewenze.Application.Services.Users;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +19,8 @@ namespace Ewenze.Application.Extensions
             services.AddValidatorsFromAssembly(applicationAssembly)
                 .AddFluentValidationAutoValidation();
 
+            services.AddTransient<IUsersService, UsersService>();
+            services.AddSingleton<IUserConverter, UserConverter>();
 
             return services;
         }
