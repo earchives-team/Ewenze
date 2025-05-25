@@ -21,14 +21,11 @@ namespace Ewenze.Infrastructure.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly JwtSettings _jwtSettings;
-        private readonly IConfiguration _configuration;
 
-
-        public AuthService(IUserRepository userRepository, IOptions<JwtSettings> jwtSettings, IConfiguration configuration)
+        public AuthService(IUserRepository userRepository, IOptions<JwtSettings> jwtSettings)
         {
-            _userRepository = userRepository;
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _jwtSettings = jwtSettings.Value;
-            _configuration = configuration;
         }
 
         public async Task<AuthResponse> Login(AuthRequest request)
@@ -38,7 +35,7 @@ namespace Ewenze.Infrastructure.Services
                 throw new UnauthorizedAccessException("Email or password are incorrect");
             
             // The user can Login with the email or username 
-            var user = await _userRepository.GetUserByEmailAsync(request.LoginInformation);
+            var user = await _userRepository.GetUserByUsernameOrEmail(request.LoginInformation);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
@@ -64,7 +61,9 @@ namespace Ewenze.Infrastructure.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.LoginName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("token_type", "access")
             };
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
 

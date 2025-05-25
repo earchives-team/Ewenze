@@ -8,11 +8,24 @@ namespace Ewenze.Application.Models
 {
     public class JwtSettings
     {
-        public string Key { get; set; }
+        private string signingKey; 
         public string Issuer { get; set; }
 
         public string Audience { get; set; }
 
         public double DurationInMinutes { get; set; }
+
+        public string SigningKey
+        {
+            get => signingKey;
+            set
+            {
+                if(string.IsNullOrWhiteSpace(value) || value.Equals("[MUSTOVERRIDE]"))
+                {
+                    throw new ArgumentException("Please set a signing key"); 
+                }
+                signingKey = value;
+            }
+        }
     }
 }

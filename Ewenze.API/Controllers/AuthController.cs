@@ -19,6 +19,31 @@ namespace Ewenze.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthResponse>> Login(AuthRequest request)
         {
+            if(request == null)
+            {
+                return BadRequest(new
+                {
+                    email = "This field is required.",
+                    password = "this field is correct."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.LoginInformation))
+            {
+                return BadRequest(new
+                {
+                    loginInformation = "This field is required"
+                }); 
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Password))
+            {
+                return BadRequest(new
+                {
+                    password = "This field is required"
+                });
+            }
+
             return Ok(await _authentificationService.Login(request));
         }
     }
