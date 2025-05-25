@@ -28,7 +28,7 @@ namespace Ewenze.Infrastructure.Repositories
             return metas;
         }
 
-        public async Task CreateUserMetadataAsync(IEnumerable<UserMeta> userMetas)
+        public async Task CreateAsync(IEnumerable<UserMeta> userMetas)
         {
             await _eWenzeDbContext.UserMetas.AddRangeAsync(userMetas);
             await _eWenzeDbContext.SaveChangesAsync();

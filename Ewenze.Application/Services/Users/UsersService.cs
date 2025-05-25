@@ -82,11 +82,11 @@ namespace Ewenze.Application.Services.Users
             {
                 throw new UsersException($"The User with email {email} was not found") { Reason = UsersExceptionReason.EntityNotFound, InvalidProperty = "email" };
             }
-            var requiredKeys = new List<string> { "first_name", "last_name", "phone_number" };
 
-            var metaDict = await UserRepository.GetUserMetaDictionnaryAsync(currentUser.Id, requiredKeys);
+            var userMetaData = (await UserMetaDataRepository.GetByUserIdBAndByMetaKeysAsync(currentUser.Id, RequiredKeys)).ToList();
+            var meta = userMetaData.ToDictionary(m => m.MetaKey, m => m.MetaValue);
 
-            return UserConverter.Convert(currentUser, metaDict.GetValueOrDefault("first_name"), metaDict.GetValueOrDefault("last_name"), metaDict.GetValueOrDefault("phone_number"));
+            return UserConverter.Convert(currentUser, meta?.GetValueOrDefault("first_name"), meta?.GetValueOrDefault("last_name"), meta?.GetValueOrDefault("phone_number"));
         }
 
         public async Task<User> GetByUserNameAsync(string username)
@@ -101,10 +101,10 @@ namespace Ewenze.Application.Services.Users
                 throw new UsersException($"The User with username {username} was not found") { Reason = UsersExceptionReason.EntityNotFound, InvalidProperty = "username" };
             }
 
-            var requiredKeys = new List<string> { "first_name", "last_name", "phone_number" };
-            var metaDict = await UserRepository.GetUserMetaDictionnaryAsync(currentUser.Id, requiredKeys);
+            var userMetaData = (await UserMetaDataRepository.GetByUserIdBAndByMetaKeysAsync(currentUser.Id, RequiredKeys)).ToList();
+            var meta = userMetaData.ToDictionary(m => m.MetaKey, m => m.MetaValue);
 
-            return UserConverter.Convert(currentUser, metaDict.GetValueOrDefault("first_name"), metaDict.GetValueOrDefault("last_name"), metaDict.GetValueOrDefault("phone_number"));
+            return UserConverter.Convert(currentUser, meta?.GetValueOrDefault("first_name"), meta?.GetValueOrDefault("last_name"), meta?.GetValueOrDefault("phone_number"));
         }
 
         public async Task<int> Create(User user)
@@ -153,7 +153,7 @@ namespace Ewenze.Application.Services.Users
                     }
                 };
 
-                await UserRepository.CreateUserMetadataAsync(metaInfoList);
+                await UserMetaDataRepository.CreateAsync(metaInfoList);
             }
 
 

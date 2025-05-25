@@ -6,6 +6,6 @@ namespace Ewenze.Domain.Repositories
     {
         Task<IEnumerable<UserMeta>> GetByMetaKeysAsync(List<string> metakeys);
         Task<IEnumerable<UserMeta>> GetByUserIdBAndByMetaKeysAsync(int userId, List<string> metaKeys);
-        Task CreateUserMetadataAsync(IEnumerable<UserMeta> users);
+        Task CreateAsync(IEnumerable<UserMeta> users);
     }
 }

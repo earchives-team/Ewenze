@@ -1,6 +1,4 @@
-﻿using Ewenze.Application.Features.UserFeature.Commands.CreateUser;
-using Ewenze.Application.Services.Users.Models;
-using MediatR;
+﻿using Ewenze.Application.Services.Users.Models;
 
 namespace Ewenze.Application.Services.Users
 {

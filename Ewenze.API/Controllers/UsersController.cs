@@ -1,9 +1,4 @@
 ﻿using Ewenze.API.Models.UsersDto;
-using Ewenze.Application.Features.UserFeature.Commands.CreateUser;
-using Ewenze.Application.Features.UserFeature.Dto;
-using Ewenze.Application.Features.UserFeature.Queries.GetUserByEmail;
-using Ewenze.Application.Features.UserFeature.Queries.GetUserById;
-using Ewenze.Application.Features.UserFeature.Queries.GetUsers;
 using Ewenze.Application.Services.Users;
 using Ewenze.Application.Services.Users.Exceptions;
 using Ewenze.Domain.Entities;
@@ -55,7 +50,7 @@ namespace Ewenze.API.Controllers
 
         // GET: api/users/by-email?email=value
         [HttpGet]
-        [ProducesResponseType(typeof(UserDto), 200)]
+        [ProducesResponseType(typeof(UserOutputDto), 200)]
         [Route("by-email")]
         public async Task<IActionResult> GetUserByEmail([Required][FromQuery]string email)
         {
