@@ -1,21 +1,29 @@
-﻿using Ewenze.Domain.Exceptions;
+﻿using Ewenze.Application.Common.Exceptions;
+using Ewenze.Application.Services.Users.Exceptions;
+using Ewenze.Domain.Exceptions;
 
 namespace Ewenze.API.Helpers
 {
     public static class ExceptionStatusCodeMapper
     {
-        private static readonly IDictionary<Type, int> ExceptionStatusCodeMapping = new Dictionary<Type, int>
+        private static readonly IDictionary<Enum, int> ReasonStatusCodeMapping = new Dictionary<Enum, int>
         {
-            { typeof(NotFoundException), StatusCodes.Status404NotFound },
-
+            { UsersExceptionReason.EntityNotFound, StatusCodes.Status404NotFound }
         };
 
 
         public static int GetStatusCodeForException(Exception exception)
         {
-            return ExceptionStatusCodeMapping.TryGetValue(exception.GetType(), out var code)
-                ? code
-                : StatusCodes.Status500InternalServerError;
+
+            if(exception is IAppExceptionWithReason withReason)
+            {
+                var reason = withReason.GetReason();
+
+                if(ReasonStatusCodeMapping.TryGetValue(reason, out var code))
+                    return  code;
+            }
+
+            return StatusCodes.Status500InternalServerError;
         }
     }
 }

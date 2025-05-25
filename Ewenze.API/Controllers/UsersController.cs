@@ -1,12 +1,17 @@
-﻿using Ewenze.Application.Features.UserFeature.Commands.CreateUser;
+﻿using Ewenze.API.Models.UsersDto;
+using Ewenze.Application.Features.UserFeature.Commands.CreateUser;
 using Ewenze.Application.Features.UserFeature.Dto;
 using Ewenze.Application.Features.UserFeature.Queries.GetUserByEmail;
 using Ewenze.Application.Features.UserFeature.Queries.GetUserById;
 using Ewenze.Application.Features.UserFeature.Queries.GetUsers;
+using Ewenze.Application.Services.Users;
+using Ewenze.Application.Services.Users.Exceptions;
 using Ewenze.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ewenze.API.Controllers
 {
@@ -15,36 +20,52 @@ namespace Ewenze.API.Controllers
     // [Authorize] // Seuls les utilisateurs authentifiés peuvent accéder
     public class UsersController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IUsersService UsersService;
+        private readonly Converters.UserConverter UserConverter;
+        private readonly IOptions<ApiBehaviorOptions> apiBehaviorOptions;
 
-        public UsersController(IMediator mediator)
+        public UsersController(IUsersService usersService, Converters.UserConverter userConverter, IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         {
-            this._mediator = mediator;
+            this.UsersService = usersService ?? throw new ArgumentNullException(nameof(usersService));
+            this.UserConverter = userConverter ?? throw new ArgumentNullException(nameof(userConverter));
+            this.apiBehaviorOptions = apiBehaviorOptions ?? throw new ArgumentNullException(nameof(apiBehaviorOptions));
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<UserOutputDto>), 200)]
         public async Task<IActionResult> Get()
         {
-            return Ok( await _mediator.Send(new GetUsersQuery()));
+            var serviceModels = await UsersService.GetAllAsync();
+            var outputDtos = UserConverter.Convert(serviceModels);
+            return Ok(outputDtos);
         }
 
         // GET: api/users/{id}
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserOutputDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserById(int id)
         {
-            return Ok(await _mediator.Send(new GetUserByIdQuery(id)));
+
+            var serviceModel = await UsersService.GetById(id);
+            var outputDtos = UserConverter.Convert(serviceModel);
+            return Ok(outputDtos);
+        
         }
 
         // GET: api/users/by-email?email=value
         [HttpGet]
         [ProducesResponseType(typeof(UserDto), 200)]
         [Route("by-email")]
-        public async Task<IActionResult> GetUserByEmail([FromQuery]string email)
+        public async Task<IActionResult> GetUserByEmail([Required][FromQuery]string email)
         {
-            return Ok(await _mediator.Send(new GetUserByEmailQuery(email)));
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); 
+            }
+            var serviceModel = await UsersService.GetByEmailAsync(email);
+            var outputDtos = UserConverter.Convert(serviceModel);
+            return Ok(outputDtos); 
         }
 
         // POST: api/users
@@ -52,11 +73,17 @@ namespace Ewenze.API.Controllers
         [AllowAnonymous] // Cette action est accessible sans authentification
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create(CreateUserCommand userCommand)
+        public async Task<ActionResult> Create(UserInputDto userInputDto)
         {
-            var response = await _mediator.Send(userCommand);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return CreatedAtAction(nameof(GetUserById), new { id = response }, response);
+            var userConverted = UserConverter.Convert(userInputDto);
+            var userId = await UsersService.Create(userConverted); 
+
+            return CreatedAtAction(nameof(GetUserById), new { id = userId }, userConverted);
         }
     }
 }

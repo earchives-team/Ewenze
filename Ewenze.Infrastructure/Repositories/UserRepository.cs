@@ -38,7 +38,7 @@ namespace Ewenze.Infrastructure.Repositories
 
         public async Task<User?> GetUserById(int id)
         {
-            return await _eWenzeDbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            return await _eWenzeDbContext.Users.FindAsync(id);
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync()

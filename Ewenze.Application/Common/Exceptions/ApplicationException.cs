@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Ewenze.Application.Common.Exceptions
 {
-    public class ApplicationException<TReason> : Exception where TReason : Enum
+
+    public interface IAppExceptionWithReason
+    {
+        Enum GetReason();
+    }
+
+    public class ApplicationException<TReason> : Exception, IAppExceptionWithReason where TReason : Enum
     {
         private const string ReasonKey = "AppExceptionReason";
 
@@ -31,5 +37,9 @@ namespace Ewenze.Application.Common.Exceptions
 
         public ApplicationException(string message, Exception innerException) : base(message, innerException) { }
 
+        public Enum GetReason()
+        {
+           return Reason;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Ewenze.API.Helpers;
 using Ewenze.Application.Exceptions;
+using Ewenze.Application.Services.Users.Exceptions;
 using Ewenze.Domain.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -58,6 +59,10 @@ namespace Ewenze.API.Middleware
             if (exception is BadRequestException badRequestEx)
             {
                 problemDetails.ErrorDetails = badRequestEx.ValidationErrors;
+            }
+            if (exception is UsersException userEx && userEx.ValidationErrors != null)
+            {
+                problemDetails.ErrorDetails = userEx.ValidationErrors;
             }
 
             return httpContext.Response.WriteAsJsonAsync(problemDetails);

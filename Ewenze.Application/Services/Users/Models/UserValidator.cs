@@ -43,8 +43,7 @@ namespace Ewenze.Application.Services.Users.Models
 
             RuleFor(u => u.Password)
                 .NotEmpty()
-                .NotNull()
-                .MaximumLength(5).WithMessage("Password must have 5 or more than characters");
+                .NotNull();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Ewenze.API.Converters;
 using Ewenze.API.Middleware;
 using Ewenze.Application.Extensions;
 using Ewenze.Infrastructure.Extensions; 
@@ -15,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<UserConverter>();
 
 var app = builder.Build();
 

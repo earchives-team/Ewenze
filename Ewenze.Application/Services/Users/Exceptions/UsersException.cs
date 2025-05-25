@@ -13,7 +13,14 @@ namespace Ewenze.Application.Services.Users.Exceptions
 
         public UsersException(string message, ValidationResult validationResult) : base(message)
         {
-            ValidationErrors = validationResult.ToDictionary();
+            Reason = UsersExceptionReason.InvalidProperty;
+
+            ValidationErrors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToArray()
+                );
         }
 
         public IDictionary<string, string[]> ValidationErrors { get; set; }
