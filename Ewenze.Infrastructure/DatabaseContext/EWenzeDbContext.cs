@@ -1,4 +1,5 @@
 ﻿using Ewenze.Domain.Entities;
+using Ewenze.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ewenze.Infrastructure.DatabaseContext
@@ -8,7 +9,8 @@ namespace Ewenze.Infrastructure.DatabaseContext
         public EWenzeDbContext(DbContextOptions<EWenzeDbContext> options) : base(options) { }
 
         public virtual DbSet<User>  Users { get; set; }
-        public virtual DbSet<UserMeta> UserMetas { get; set; }  
+        public virtual DbSet<UserMeta> UserMetas { get; set; }
+        public virtual DbSet<PostTypeEntity> PostTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +40,18 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 entity.Property(e => e.UserId).HasColumnType("int").IsRequired();
                 entity.Property(e => e.MetaKey).HasColumnType("varchar(255)").IsRequired();
                 entity.Property(e => e.MetaValue).HasColumnType("varchar(255)");
-            }); 
+            });
+
+            modelBuilder.Entity<PostTypeEntity>(entity =>
+            {
+                entity.ToTable("wp0_posts");
+                entity.Property(p => p.Id).HasColumnType("bigint unsigned").IsRequired();
+                entity.Property(p => p.PostTitle).HasColumnType("text");
+                entity.Property(p => p.PostStatus).HasColumnType("varchar(20)");
+                entity.Property(p => p.PostModified).HasColumnType("datetime");
+                entity.Property(p => p.PostDate).HasColumnType("datetime");
+                entity.Property(p => p.PostType).HasColumnType("varchar(20)");
+            });
         }
     }
 }
