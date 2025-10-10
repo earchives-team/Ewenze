@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ewenze.Application.Services.Listings.Models
+﻿namespace Ewenze.API.Models.ListingDto
 {
-    public class Listing
+    public class ListingOutputDto
     {
         public int Id { get; set; }
 

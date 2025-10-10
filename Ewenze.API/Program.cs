@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<UserConverter>();
 builder.Services.AddSingleton<ListingTypeConverter>();
+builder.Services.AddSingleton<ListingConverter>();
 
 var app = builder.Build();
 
