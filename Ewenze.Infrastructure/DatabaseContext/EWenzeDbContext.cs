@@ -44,7 +44,7 @@ namespace Ewenze.Infrastructure.DatabaseContext
 
             modelBuilder.Entity<PostTypeEntity>(entity =>
             {
-                entity.ToTable("wp0_posts");
+                entity.ToTable("wpu0_posts");
                 entity.Property(p => p.Id).HasColumnType("bigint unsigned").IsRequired();
                 entity.Property(p => p.PostTitle).HasColumnType("text");
                 entity.Property(p => p.PostStatus).HasColumnType("varchar(20)");

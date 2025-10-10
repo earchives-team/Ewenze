@@ -17,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<UserConverter>();
+builder.Services.AddSingleton<ListingTypeConverter>();
 
 var app = builder.Build();
 

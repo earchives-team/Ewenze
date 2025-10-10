@@ -1,4 +1,5 @@
-﻿using Ewenze.Application.Services.Users;
+﻿using Ewenze.Application.Services.ListingTypes;
+using Ewenze.Application.Services.Users;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,9 @@ namespace Ewenze.Application.Extensions
 
             services.AddTransient<IUsersService, UsersService>();
             services.AddSingleton<IUserConverter, UserConverter>();
+
+            services.AddTransient<IListingTypeService, ListingTypeService>();
+            services.AddSingleton<IListingTypeConverter, ListingTypeConverter>();
 
             return services;
         }
