@@ -15,6 +15,9 @@ namespace Ewenze.Infrastructure.Persistence.Entities
         [Column("post_title")]
         public string PostTitle { get; set; }
 
+        [Column("post_content")]
+        public string PostContent { get; set; }
+
         [Column("post_status")]
         public string PostStatus { get; set; }
 

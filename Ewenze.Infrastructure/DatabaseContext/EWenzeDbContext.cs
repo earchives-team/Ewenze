@@ -48,6 +48,7 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 entity.Property(p => p.Id).HasColumnType("bigint unsigned").IsRequired();
                 entity.Property(p => p.PostTitle).HasColumnType("text");
                 entity.Property(p => p.PostStatus).HasColumnType("varchar(20)");
+                entity.Property(p => p.PostContent).HasColumnType("longtext");
                 entity.Property(p => p.PostModified).HasColumnType("datetime");
                 entity.Property(p => p.PostDate).HasColumnType("datetime");
                 entity.Property(p => p.PostType).HasColumnType("varchar(20)");

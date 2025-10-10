@@ -30,6 +30,7 @@ namespace Ewenze.Infrastructure.Extensions
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IUserMetaDataRepository, UserMetaDataRepository>();
             services.AddTransient<IListingTypeRepository, ListingTypeRepository>();
+            services.AddTransient<IListingRepository, ListingRepository>();
 
 
             // Mise en place de system d'authentification 
