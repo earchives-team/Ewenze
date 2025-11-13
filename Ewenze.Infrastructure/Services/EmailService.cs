@@ -2,8 +2,10 @@
 using Ewenze.Application.EMailManagement;
 using Ewenze.Infrastructure.Persistence.Email;
 using Microsoft.Extensions.Options;
-using System.Net;
-using System.Net.Mail;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using MimeKit.Text;
 
 namespace Ewenze.Infrastructure.Services
 {
@@ -18,25 +20,33 @@ namespace Ewenze.Infrastructure.Services
 
         public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
         {
+            var email = new MimeMessage();
+            email.From.Add(new MailboxAddress(_settings.SenderName, _settings.SenderEmail));
+            email.To.Add(MailboxAddress.Parse(toEmail));
+            email.Subject = subject;
+
+            email.Body = new TextPart(TextFormat.Html)
+            {
+                Text = htmlBody
+            };
+
+            using var smtp = new SmtpClient();
+
             try
             {
-                using var message = new MailMessage();
-                message.From = new MailAddress(_settings.SenderEmail, _settings.SenderName);
-                message.To.Add(new MailAddress(toEmail));
-                message.Subject = subject;
-                message.Body = htmlBody;
-                message.IsBodyHtml = true;
+                await smtp.ConnectAsync(_settings.SmtpServer, _settings.SmtpPort, SecureSocketOptions.StartTls);
 
-                using var client = new SmtpClient(_settings.SmtpServer, _settings.SmtpPort);
-                client.Credentials = new NetworkCredential(_settings.Username, _settings.Password);
-                client.EnableSsl = _settings.EnableSsl;
+                await smtp.AuthenticateAsync(_settings.Username, _settings.Password);
 
-                await client.SendMailAsync(message);
-
+                await smtp.SendAsync(email);
             }
             catch (Exception ex)
             {
-                throw;
+                throw new Exception($"Erreur lors de l'envoi de l'email : {ex.Message}", ex);
+            }
+            finally
+            {
+                await smtp.DisconnectAsync(true);
             }
         }
 
