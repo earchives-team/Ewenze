@@ -48,16 +48,26 @@ namespace Ewenze.API.Controllers
         }
 
         [HttpPost("forgot-password")]
-        public async Task<ActionResult> ForgotPassword([FromBody] string email)
+        public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest forgotPasswordRequest)
         {
-            await _authentificationService.ForgotPassword(email);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _authentificationService.ForgotPassword(forgotPasswordRequest.Email);
             return Ok();
         }
 
         [HttpPost("reset-password")]
-        public async Task<ActionResult> ResetPassword(string email, string newPassword, string token)
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest)
         {
-            await _authentificationService.ResetPassword(email, newPassword, token);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _authentificationService.ResetPassword(resetPasswordRequest.Email, resetPasswordRequest.NewPassword, resetPasswordRequest.Token);
             return Ok();
         }
     }
