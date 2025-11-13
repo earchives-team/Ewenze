@@ -1,8 +1,10 @@
 ﻿
 using Ewenze.Application.Authentication;
+using Ewenze.Application.EMailManagement;
 using Ewenze.Application.Models;
 using Ewenze.Domain.Repositories;
 using Ewenze.Infrastructure.DatabaseContext;
+using Ewenze.Infrastructure.Persistence.Email;
 using Ewenze.Infrastructure.Repositories;
 using Ewenze.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +21,7 @@ namespace Ewenze.Infrastructure.Extensions
         public static IServiceCollection AddEwenzeInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
             services.AddDbContext<EWenzeDbContext>(options =>
             {
@@ -31,6 +34,7 @@ namespace Ewenze.Infrastructure.Extensions
             services.AddTransient<IUserMetaDataRepository, UserMetaDataRepository>();
             services.AddTransient<IListingTypeRepository, ListingTypeRepository>();
             services.AddTransient<IListingRepository, ListingRepository>();
+            services.AddTransient<IEmailService, EmailService>();
 
 
             // Mise en place de system d'authentification 

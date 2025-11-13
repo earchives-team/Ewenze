@@ -46,5 +46,19 @@ namespace Ewenze.API.Controllers
 
             return Ok(await _authentificationService.Login(request));
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult> ForgotPassword([FromBody] string email)
+        {
+            await _authentificationService.ForgotPassword(email);
+            return Ok();
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword(string email, string newPassword, string token)
+        {
+            await _authentificationService.ResetPassword(email, newPassword, token);
+            return Ok();
+        }
     }
 }

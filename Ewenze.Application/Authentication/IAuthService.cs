@@ -5,5 +5,8 @@ namespace Ewenze.Application.Authentication
     public interface IAuthService
     {
         Task<AuthResponse> Login(AuthRequest request);
+        Task Logout();
+        Task ForgotPassword(string email);
+        Task ResetPassword(string email, string newPassword, string token);
     }
 }
