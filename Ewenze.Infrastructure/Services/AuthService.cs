@@ -102,48 +102,49 @@ namespace Ewenze.Infrastructure.Services
         #region Reset Password
         public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)
         {
-            var user = await _userRepository.GetUserByEmailAsync(resetPasswordRequest.Email);
+            throw new NotImplementedException();
+            //var user = await _userRepository.GetUserByEmailAsync(resetPasswordRequest.Email);
 
-            if (string.IsNullOrWhiteSpace(resetPasswordRequest.Email) || string.IsNullOrWhiteSpace(resetPasswordRequest.NewPassword) || string.IsNullOrWhiteSpace(resetPasswordRequest.Otp))
-                throw new ArgumentException("Invalid parameters");
+            //if (string.IsNullOrWhiteSpace(resetPasswordRequest.Email) || string.IsNullOrWhiteSpace(resetPasswordRequest.NewPassword) || string.IsNullOrWhiteSpace(resetPasswordRequest.Otp))
+            //    throw new ArgumentException("Invalid parameters");
 
-            if (user == null)
-                throw new UsersException("email not valid")
-                {
-                    Reason = UsersExceptionReason.EntityNotFound,
-                    InvalidProperty = "email"
-                };
+            //if (user == null)
+            //    throw new UsersException("email not valid")
+            //    {
+            //        Reason = UsersExceptionReason.EntityNotFound,
+            //        InvalidProperty = "email"
+            //    };
 
-            var handler = new JwtSecurityTokenHandler();
-            JwtSecurityToken jwtToken;
+            //var handler = new JwtSecurityTokenHandler();
+            //JwtSecurityToken jwtToken;
 
-            try
-            {
-                jwtToken = handler.ReadJwtToken(token);
-            }
-            catch
-            {
-                throw new UnauthorizedAccessException("Invalid token");
-            }
+            //try
+            //{
+            //    jwtToken = handler.ReadJwtToken(token);
+            //}
+            //catch
+            //{
+            //    throw new UnauthorizedAccessException("Invalid token");
+            //}
 
-            // 1️ Vérifier l’expiration
-            if (jwtToken.ValidTo < DateTime.UtcNow)
-                throw new SecurityTokenExpiredException("Token has expired");
+            //// 1️ Vérifier l’expiration
+            //if (jwtToken.ValidTo < DateTime.UtcNow)
+            //    throw new SecurityTokenExpiredException("Token has expired");
 
-            // 2️ Vérifier le type de token
-            var tokenType = jwtToken.Claims.FirstOrDefault(c => c.Type == "token_type")?.Value;
-            if (tokenType != "reset_password")
-                throw new SecurityTokenException("Invalid token type");
+            //// 2️ Vérifier le type de token
+            //var tokenType = jwtToken.Claims.FirstOrDefault(c => c.Type == "token_type")?.Value;
+            //if (tokenType != "reset_password")
+            //    throw new SecurityTokenException("Invalid token type");
 
-            // 3️ Vérifier l’identité de l’utilisateur
-            var tokenEmail = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email)?.Value;
-            if (!string.Equals(tokenEmail, email, StringComparison.OrdinalIgnoreCase))
-                throw new SecurityTokenException("Token does not match user email");
+            //// 3️ Vérifier l’identité de l’utilisateur
+            //var tokenEmail = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email)?.Value;
+            //if (!string.Equals(tokenEmail, email, StringComparison.OrdinalIgnoreCase))
+            //    throw new SecurityTokenException("Token does not match user email");
 
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            user.Password = hashedPassword;
+            //var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            //user.Password = hashedPassword;
 
-            await _userRepository.UpdateUser(user);
+            //await _userRepository.UpdateUser(user);
         }
         #endregion
 
