@@ -78,24 +78,33 @@ namespace Ewenze.Infrastructure.Services
                 };
 
 
+            /*
+             Au lieu de generer un Token 
+            Utiliser un OTP (One Time Password) Le mettre en Db 
+
+             
+             */
+            var otp = GenerateOTP();
+            var hashedOtp = HashOTP(otp);
+
             var token = GeneratePasswordResetToken(user);
 
-            if(token != null)
-            {
-                // L'url est temporaire est devrait etre mis dans le appSettings.json
-                var resetLink = $"https://yourapp.com/reset-password?token={new JwtSecurityTokenHandler().WriteToken(token)}";
-                await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
-            }
+            //if(token != null)
+            //{
+            //    // L'url est temporaire est devrait etre mis dans le appSettings.json
+            //    var resetLink = $"https://yourapp.com/reset-password?token={new JwtSecurityTokenHandler().WriteToken(token)}";
+            //    await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
+            //}
 
         }
         #endregion
 
         #region Reset Password
-        public async Task ResetPassword(string email, string newPassword, string token)
+        public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)
         {
-            var user = await _userRepository.GetUserByEmailAsync(email);
+            var user = await _userRepository.GetUserByEmailAsync(resetPasswordRequest.Email);
 
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(newPassword) || string.IsNullOrWhiteSpace(token))
+            if (string.IsNullOrWhiteSpace(resetPasswordRequest.Email) || string.IsNullOrWhiteSpace(resetPasswordRequest.NewPassword) || string.IsNullOrWhiteSpace(resetPasswordRequest.Otp))
                 throw new ArgumentException("Invalid parameters");
 
             if (user == null)
@@ -197,6 +206,20 @@ namespace Ewenze.Infrastructure.Services
 
             return jwtSecurityToken;
         }
+        #endregion
+
+        #region Generate OPT 
+        private string GenerateOTP()
+        {
+            var random = new Random();
+            int otp = random.Next(100000, 999999);
+            return otp.ToString();
+        }
+        private string HashOTP(string otp)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(otp);
+        }
+
         #endregion
     }
 }

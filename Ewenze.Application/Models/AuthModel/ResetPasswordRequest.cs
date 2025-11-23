@@ -10,6 +10,6 @@ namespace Ewenze.Application.Models.AuthModel
         [Required]
         public string NewPassword { get; set; }
         [Required]
-        public string Token { get; set; }
+        public string Otp { get; set; }
     }
 }

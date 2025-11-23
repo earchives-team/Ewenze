@@ -7,6 +7,6 @@ namespace Ewenze.Application.Authentication
         Task<AuthResponse> Login(AuthRequest request);
         Task Logout();
         Task ForgotPassword(string email);
-        Task ResetPassword(string email, string newPassword, string token);
+        Task ResetPassword(ResetPasswordRequest resetPasswordRequest);
     }
 }

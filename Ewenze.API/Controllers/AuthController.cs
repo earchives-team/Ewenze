@@ -67,7 +67,7 @@ namespace Ewenze.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _authentificationService.ResetPassword(resetPasswordRequest.Email, resetPasswordRequest.NewPassword, resetPasswordRequest.Token);
+            await _authentificationService.ResetPassword(resetPasswordRequest);
             return Ok();
         }
     }
