@@ -4,15 +4,12 @@ namespace Ewenze.Application.Services.Users
 {
     public class UserConverter : IUserConverter
     {
-        public IList<User> Convert(IEnumerable<(Domain.Entities.User user, string? firstName, string? lastName, string? phoneNumber)> users)
+        public IList<User> Convert(IEnumerable<Domain.Entities.UserV2> users)
         {
-            return users
-                    .Select(u => 
-                        Convert(u.user, u.firstName, u.lastName, u.phoneNumber))
-                    .ToList();
+            return users.Select(u => Convert(u)).ToList();
         }
 
-        public User Convert(Domain.Entities.User user, string? firstName, string? lastName, string? phoneNumber)
+        public User Convert(Domain.Entities.UserV2 user)
         {
             if(user == null) 
                 return null;
@@ -21,11 +18,8 @@ namespace Ewenze.Application.Services.Users
             {
                 Id = user.Id,
                 Email = user.Email,
-                FirstName = firstName,
-                LastName = lastName,
-                PhoneNumber = phoneNumber,
-                NiceName = user.NiceName,
-                UserName = user.NiceName
+                Name = user.Name,
+                PhoneNumber = user.Phone,
             };
         }
     }

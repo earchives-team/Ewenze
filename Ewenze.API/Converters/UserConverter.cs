@@ -15,11 +15,7 @@ namespace Ewenze.API.Converters
             {
                 Id = user.Id,
                 Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                NiceName = user.NiceName,
-                phoneNumber = user.PhoneNumber,
-                UserName = user.UserName,
+                Name = user.Name,
             }; 
         }
 
@@ -29,12 +25,9 @@ namespace Ewenze.API.Converters
             {
                 Id = userInputDto.Id,
                 Email = userInputDto.Email,
-                FirstName = userInputDto.FirstName,
-                LastName = userInputDto.LastName,
+                Name = userInputDto.Name,
                 PhoneNumber = userInputDto.PhoneNumber,
-                Password = userInputDto.Password,
-                NiceName = userInputDto.UserName,
-                UserName = userInputDto.UserName
+                Password = userInputDto.Password
             };
         }
     }

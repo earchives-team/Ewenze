@@ -16,20 +16,10 @@ namespace Ewenze.Application.Services.Users.Models
         {
             _userRepository = userRepository;
 
-            RuleFor(u => u.UserName)
+            RuleFor(u => u.Name)
                .NotEmpty().WithMessage("{PropertyName} is required")
                .NotNull()
                .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");
-
-            RuleFor(u => u.LastName)
-               .NotEmpty().WithMessage("{PropertyName} is required")
-               .NotNull()
-               .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");
-
-            RuleFor(u => u.FirstName)
-                .NotEmpty().WithMessage("{PropertyName} is required")
-                .NotNull()
-                .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");
 
             RuleFor(u => u.PhoneNumber)
                 .NotEmpty().WithMessage("{PropertyName} is required")

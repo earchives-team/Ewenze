@@ -35,14 +35,14 @@ namespace Ewenze.Infrastructure.Services
         #region Login 
         public async Task<AuthResponse> Login(AuthRequest request)
         {
-            
-            if(request.LoginInformation == null)
-                throw new UnauthorizedAccessException("Email or password are incorrect");
-            
-            // The user can Login with the email or username 
-            var user = await _userRepository.GetUserByUsernameOrEmail(request.LoginInformation);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (request.LoginInformation == null)
+                throw new UnauthorizedAccessException("Email or password are incorrect");
+
+            // The user can Login with the email or username 
+            var user = await _userRepository.GetUserByEmailAsync(request.LoginInformation);
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 throw new UnauthorizedAccessException("Email or password are incorrect");
             }
@@ -54,7 +54,7 @@ namespace Ewenze.Infrastructure.Services
                 Id = user.Id,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Email = user.Email,
-                UserName = user.LoginName
+                UserName = user.Name
             };
 
             return response;
@@ -65,10 +65,10 @@ namespace Ewenze.Infrastructure.Services
 
         public async Task ForgotPassword(string email)
         {
-            if(string.IsNullOrWhiteSpace(email))
+            if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentNullException(nameof(email));
 
-            var user = await _userRepository.GetUserByUsernameOrEmail(email);
+            var user = await _userRepository.GetUserByEmailAsync(email);
 
             if (user == null)
                 throw new UsersException("email not valid")
@@ -77,74 +77,62 @@ namespace Ewenze.Infrastructure.Services
                     InvalidProperty = "email"
                 };
 
-
-            /*
-             Au lieu de generer un Token 
-            Utiliser un OTP (One Time Password) Le mettre en Db 
-
-             
-             */
             var otp = GenerateOTP();
             var hashedOtp = HashOTP(otp);
 
-            var token = GeneratePasswordResetToken(user);
+            user.Otp = hashedOtp;
+            user.OtpExpiration = DateTime.UtcNow.AddMinutes(15);
 
-            //if(token != null)
-            //{
-            //    // L'url est temporaire est devrait etre mis dans le appSettings.json
-            //    var resetLink = $"https://yourapp.com/reset-password?token={new JwtSecurityTokenHandler().WriteToken(token)}";
-            //    await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
-            //}
-
+            await _userRepository.UpdateUserAsync(user);
+            await _emailService.SendPasswordResetEmailAsync(user.Email, otp);
         }
         #endregion
 
         #region Reset Password
         public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)
         {
-            throw new NotImplementedException();
-            //var user = await _userRepository.GetUserByEmailAsync(resetPasswordRequest.Email);
+            var user = await _userRepository.GetUserByEmailAsync(resetPasswordRequest.Email);
 
-            //if (string.IsNullOrWhiteSpace(resetPasswordRequest.Email) || string.IsNullOrWhiteSpace(resetPasswordRequest.NewPassword) || string.IsNullOrWhiteSpace(resetPasswordRequest.Otp))
-            //    throw new ArgumentException("Invalid parameters");
+            if (string.IsNullOrWhiteSpace(resetPasswordRequest.Email) || string.IsNullOrWhiteSpace(resetPasswordRequest.NewPassword) || string.IsNullOrWhiteSpace(resetPasswordRequest.Otp))
+                throw new UsersException("Invalid parameters")
+                {
+                    Reason = UsersExceptionReason.InvalidProperty,
+                    InvalidProperty = "email/newPassword/otp"
+                };
+                    
 
-            //if (user == null)
-            //    throw new UsersException("email not valid")
-            //    {
-            //        Reason = UsersExceptionReason.EntityNotFound,
-            //        InvalidProperty = "email"
-            //    };
+            if (user == null)
+                throw new UsersException("email not valid")
+                {
+                    Reason = UsersExceptionReason.EntityNotFound,
+                    InvalidProperty = "email"
+                };
 
-            //var handler = new JwtSecurityTokenHandler();
-            //JwtSecurityToken jwtToken;
+            if (user.Otp == null)
+                throw new UsersException("OTP is invalid")
+                {
+                    Reason = UsersExceptionReason.InvalidProperty,
+                    InvalidProperty = "otp"
+                };
 
-            //try
-            //{
-            //    jwtToken = handler.ReadJwtToken(token);
-            //}
-            //catch
-            //{
-            //    throw new UnauthorizedAccessException("Invalid token");
-            //}
+            if(user.OtpExpiration < DateTime.UtcNow)
+                throw new UsersException("OTP has expired")
+                {
+                    Reason = UsersExceptionReason.InvalidProperty,
+                    InvalidProperty = "otp"
+                };
 
-            //// 1️ Vérifier l’expiration
-            //if (jwtToken.ValidTo < DateTime.UtcNow)
-            //    throw new SecurityTokenExpiredException("Token has expired");
+            if (!BCrypt.Net.BCrypt.Verify(resetPasswordRequest.Otp, user.Otp))
+                throw new UsersException("OTP is invalid")
+                {
+                    Reason = UsersExceptionReason.InvalidProperty,
+                    InvalidProperty = "otp"
+                };
 
-            //// 2️ Vérifier le type de token
-            //var tokenType = jwtToken.Claims.FirstOrDefault(c => c.Type == "token_type")?.Value;
-            //if (tokenType != "reset_password")
-            //    throw new SecurityTokenException("Invalid token type");
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(resetPasswordRequest.NewPassword);
+            user.PasswordHash = hashedPassword;
 
-            //// 3️ Vérifier l’identité de l’utilisateur
-            //var tokenEmail = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email)?.Value;
-            //if (!string.Equals(tokenEmail, email, StringComparison.OrdinalIgnoreCase))
-            //    throw new SecurityTokenException("Token does not match user email");
-
-            //var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            //user.Password = hashedPassword;
-
-            //await _userRepository.UpdateUser(user);
+            await _userRepository.UpdateUserAsync(user);
         }
         #endregion
 
@@ -156,11 +144,11 @@ namespace Ewenze.Infrastructure.Services
         #endregion
 
         #region Generate Token
-        private JwtSecurityToken GenerateToken(User user)
+        private JwtSecurityToken GenerateToken(UserV2 user)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.LoginName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Name),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -180,32 +168,6 @@ namespace Ewenze.Infrastructure.Services
 
             return jwtSecurityToken;
 
-        }
-        #endregion
-
-        #region Generate Password Reset Token
-        private JwtSecurityToken GeneratePasswordResetToken(User user)
-        {
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.LoginName),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim("token_type", "reset_password")
-            };
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SigningKey));
-
-            var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwtSettings.Issuer,
-                audience: _jwtSettings.Audience,
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(15), // Password reset token valid for 30 minutes
-                signingCredentials: new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return jwtSecurityToken;
         }
         #endregion
 

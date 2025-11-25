@@ -9,12 +9,11 @@ namespace Ewenze.Domain.Repositories
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetUsersAsync(); 
-        Task<User?> GetUserByEmailAsync(string email);
-        Task<User?> GetUserById(int id);
-        Task<User?> GetUserByUsernameOrEmail(string username);
-        Task<User> CreateUser(User user); 
-        Task UpdateUser(User user);
-        Task DeleteUser(int id);
+        Task<IEnumerable<UserV2>> GetUsersAsync(); 
+        Task<UserV2?> GetUserByEmailAsync(string email);
+        Task<UserV2?> GetUserByIdAsync(int id);
+        Task<UserV2> CreateUserAsync(UserV2 user); 
+        Task UpdateUserAsync(UserV2 user);
+        Task DeleteUserAsync(int id);
     }
 }

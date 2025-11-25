@@ -76,7 +76,7 @@ namespace Ewenze.API.Controllers
             }
 
             var userConverted = UserConverter.Convert(userInputDto);
-            var userId = await UsersService.Create(userConverted); 
+            var userId = await UsersService.CreateAsync(userConverted); 
 
             return CreatedAtAction(nameof(GetUserById), new { id = userId }, userConverted);
         }

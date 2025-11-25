@@ -2,11 +2,6 @@
 using Ewenze.Domain.Repositories;
 using Ewenze.Infrastructure.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ewenze.Infrastructure.Repositories
 {
@@ -19,44 +14,37 @@ namespace Ewenze.Infrastructure.Repositories
             this._eWenzeDbContext = eWenzeDbContext;
         }
 
-        public async Task<User> CreateUser(User user)
+        public async Task<UserV2> CreateUserAsync(UserV2 user)
         {
             await _eWenzeDbContext.AddAsync(user);
             await _eWenzeDbContext.SaveChangesAsync();
             return user;
         }
 
-        public Task DeleteUser(int id)
+        public Task DeleteUserAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<User?> GetUserByEmailAsync(string email)
+        public async Task<UserV2?> GetUserByEmailAsync(string email)
         {
-            return await _eWenzeDbContext.Users.FirstOrDefaultAsync(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            return await _eWenzeDbContext.UserV2s.FirstOrDefaultAsync(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
 
-        public async Task<User?> GetUserById(int id)
+        public async Task<UserV2?> GetUserByIdAsync(int id)
         {
-            return await _eWenzeDbContext.Users.FindAsync(id);
+            return await _eWenzeDbContext.UserV2s.FindAsync(id);
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        public async Task<IEnumerable<UserV2>> GetUsersAsync()
         {
-            return await _eWenzeDbContext.Users.ToListAsync();
+            return await _eWenzeDbContext.UserV2s.ToListAsync();
         }
 
-        public async Task<User?> GetUserByUsernameOrEmail(string value)
+        public async Task UpdateUserAsync(UserV2 user)
         {
-            return await _eWenzeDbContext.Users
-                .FirstOrDefaultAsync(x =>
-                                    x.LoginName.Equals(value, StringComparison.OrdinalIgnoreCase) ||
-                                    x.Email.Equals(value, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public Task UpdateUser(User user)
-        {
-            throw new NotImplementedException();
+            _eWenzeDbContext.UserV2s.Update(user);
+            await _eWenzeDbContext.SaveChangesAsync();
         }
     }
 }

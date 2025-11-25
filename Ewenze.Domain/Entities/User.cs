@@ -1,61 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ewenze.Domain.Entities
 {
-    [Table("wpu0_users")]
-    public class User
+    public class UserV2
     {
-        [Key]
-        [Column("ID")]
         public int Id { get; set; }
 
-        [Column("user_login")]
-        [Required]
-        [MaxLength(60)]
-        public string LoginName { get; set; }
-
-        [Column("user_pass")]
-        [Required]
-        [MaxLength(255)]
-        public string Password { get; set; }
-
-        [Column("user_nicename")]
-        [Required]
-        [MaxLength(50)]
-        public string NiceName { get; set; }
-
-        [Column("user_email")]
-        [Required]
-        [MaxLength(100)]
+        // Basic Info
         public string Email { get; set; }
+        public string Name { get; set; }
+        public string PasswordHash { get; set; }
 
-        [Column("user_url")]
-        [Required]
-        [MaxLength(100)]
-        public string Url { get; set; }
+        // Contact Info
+        public string? Phone { get; set; }
+        public bool PhoneVerified { get; set; }
 
-        [Column("user_registered")]
-        [Required]
-        public DateTime RegisteredDate { get; set; }
+        // Personal Info
+        public string? Sex { get; set; }
+        public DateTime? Birthday { get; set; }
+        public string? AvatarUrl { get; set; }
 
-        [Column("user_activation_key")]
-        [Required]
-        [MaxLength(255)]
-        public string ActivationKey { get; set; }
+        // Security & Verification
+        public string? Otp { get; set; }
+        public DateTimeOffset? OtpExpiration { get; set; }
+        public bool IsEmailVerified { get; set; }
 
-        [Column("user_status")]
-        [Required]
-        public int UserStatus { get; set; }
+        // E-commerce/Marketplace specific
+        public string Role { get; set; }
+        public bool IsActive { get; set; } = true;
 
-        [Column("display_name")]
-        [Required]
-        [MaxLength(250)]
-        public string DisplayName { get; set; }
+        // Preferences
+        public string PreferredLanguage { get; set; }
+        public string PreferredCurrency { get; set; }
+        public bool NewsletterSubscribed { get; set; }
+
+        // Additional Info
+        public DateTimeOffset? LastLoginAt { get; set; }
+
+        // Timestamps
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     }
 }

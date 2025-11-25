@@ -55,14 +55,14 @@ namespace Ewenze.Infrastructure.Services
            throw new NotImplementedException();
         }
 
-        public async Task SendPasswordResetEmailAsync(string toEmail, string resetLink)
+        public async Task SendPasswordResetEmailAsync(string toEmail, string otp)
         {
             var subject = "Réinitialisation de votre mot de passe";
             var body = $@"
                 <h2>Réinitialisation de mot de passe</h2>
                 <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
-                <p>Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe :</p>
-                <a href='{resetLink}'>Réinitialiser mon mot de passe</a>
+                <p>Veuillez utiliser ce code access pour votre initialiser votre mot de passe:</p>
+                <a>${otp}</a>
                 <p>Ce lien expire dans 15 Minute.</p>
                 <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
             ";

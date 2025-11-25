@@ -25,7 +25,7 @@ namespace Ewenze.Infrastructure.Extensions
 
             services.AddDbContext<EWenzeDbContext>(options =>
             {
-                options.UseMySQL(configuration.GetConnectionString("EWenze")!);
+                options.UseNpgsql(configuration.GetConnectionString("EWenze")!);
             });
 
 
