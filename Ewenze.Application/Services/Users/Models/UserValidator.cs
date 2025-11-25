@@ -21,10 +21,10 @@ namespace Ewenze.Application.Services.Users.Models
                .NotNull()
                .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");
 
-            RuleFor(u => u.PhoneNumber)
-                .NotEmpty().WithMessage("{PropertyName} is required")
-                .NotNull()
-                .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");
+            //RuleFor(u => u.PhoneNumber)
+            //    .NotEmpty().WithMessage("{PropertyName} is required")
+            //    .NotNull()
+            //    .MaximumLength(60).WithMessage("{PropertyName} must be fewer than 60 charatecters");
 
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("{PropertyName} is required")

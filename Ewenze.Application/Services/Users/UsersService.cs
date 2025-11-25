@@ -68,7 +68,10 @@ namespace Ewenze.Application.Services.Users
                 Name = user.Name,
                 Phone = user.PhoneNumber,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.Password), 
+                IsActive = true,
                 CreatedAt = DateTime.UtcNow,
+                Birthday = user.BirthDate.Date,
+
             };
 
             var newUser = await UserRepository.CreateUserAsync(convertedUser); 

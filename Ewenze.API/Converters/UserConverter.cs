@@ -27,7 +27,8 @@ namespace Ewenze.API.Converters
                 Email = userInputDto.Email,
                 Name = userInputDto.Name,
                 PhoneNumber = userInputDto.PhoneNumber,
-                Password = userInputDto.Password
+                Password = userInputDto.Password,
+                BirthDate =  new DateTime(userInputDto.BirthDate.Year, userInputDto.BirthDate.Month, userInputDto.BirthDate.Day).Date,
             };
         }
     }

@@ -81,9 +81,11 @@ namespace Ewenze.Infrastructure.DatabaseContext
                     .HasColumnName("is_email_verified")
                     .HasDefaultValue(false);
 
+                // E-commerce/Marketplace specific
                 entity.Property(e => e.Role)
                     .HasColumnName("role")
-                    .HasMaxLength(20);
+                    .HasMaxLength(20)
+                    .HasDefaultValue("customer");
 
                 entity.Property(e => e.IsActive)
                     .HasColumnName("is_active")
@@ -92,11 +94,13 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 // Preferences
                 entity.Property(e => e.PreferredLanguage)
                     .HasColumnName("preferred_language")
-                    .HasMaxLength(10);
+                    .HasMaxLength(10)
+                    .HasDefaultValue("fr");
 
                 entity.Property(e => e.PreferredCurrency)
                     .HasColumnName("preferred_currency")
-                    .HasMaxLength(5);
+                    .HasMaxLength(3)
+                    .HasDefaultValue("USD");
 
                 entity.Property(e => e.NewsletterSubscribed)
                     .HasColumnName("newsletter_subscribed")
