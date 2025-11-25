@@ -5,17 +5,22 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{145A7758-32B4-4BFE-9EAB-90F166910146}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewenze.Domain", "Ewenze.Domain\Ewenze.Domain.csproj", "{5437F193-A1E0-44A5-AC63-EEB2ACADF471}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ewenze.Domain", "Ewenze.Domain\Ewenze.Domain.csproj", "{5437F193-A1E0-44A5-AC63-EEB2ACADF471}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewenze.Application", "Ewenze.Application\Ewenze.Application.csproj", "{0884F5BA-5D88-4BEF-B1F7-50F3AEEF0D0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ewenze.Application", "Ewenze.Application\Ewenze.Application.csproj", "{0884F5BA-5D88-4BEF-B1F7-50F3AEEF0D0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewenze.Infrastructure", "Ewenze.Infrastructure\Ewenze.Infrastructure.csproj", "{94965A4C-5F79-4A15-B123-C05AF422094F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ewenze.Infrastructure", "Ewenze.Infrastructure\Ewenze.Infrastructure.csproj", "{94965A4C-5F79-4A15-B123-C05AF422094F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewenze.API", "Ewenze.API\Ewenze.API.csproj", "{FC810897-CECF-4F05-ADBE-ABBF0BD7805E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ewenze.API", "Ewenze.API\Ewenze.API.csproj", "{FC810897-CECF-4F05-ADBE-ABBF0BD7805E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{47626F6E-69B0-481E-9104-05D1943B4202}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewenze.UnitTests", "Ewenze.UnitTests\Ewenze.UnitTests.csproj", "{F1E3AA63-9A7A-405B-B2EA-E6C52698290C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ewenze.UnitTests", "Ewenze.UnitTests\Ewenze.UnitTests.csproj", "{F1E3AA63-9A7A-405B-B2EA-E6C52698290C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "init-db", "init-db", "{2E865D4E-7331-407F-B65A-E4BC9E46F3D3}"
+	ProjectSection(SolutionItems) = preProject
+		01-user-init.sql = 01-user-init.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
