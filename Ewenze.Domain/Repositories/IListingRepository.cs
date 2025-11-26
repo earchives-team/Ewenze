@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ewenze.Domain.Entities;
 
 namespace Ewenze.Domain.Repositories
 {
     public interface IListingRepository
     {
-        Task<IEnumerable<Entities.Listing>> GetAsync();
-        Task<Entities.Listing?> GetById(int id);
+        Task<IEnumerable<ListingV2>> GetAsync();
+        Task<ListingV2?> GetByIdAsync(int id);
+        Task<ListingV2> CreateAsync(ListingV2 listingType);
+        Task UpdateAsync(ListingV2 listingType);
     }
 }

@@ -2,58 +2,39 @@
 using Ewenze.Domain.Repositories;
 using Ewenze.Infrastructure.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ewenze.Infrastructure.Repositories
 {
     public class ListingRepository : IListingRepository
     {
-        private readonly EWenzeDbContext _eWenzeDbContext;
-        private const string ListingKey = "job_listing";
+        private readonly EWenzeDbContext EWenzeDbContext;
 
         public ListingRepository(EWenzeDbContext eWenzeDbContext)
         {
-            this._eWenzeDbContext = eWenzeDbContext;
+            this.EWenzeDbContext = eWenzeDbContext;
         }
 
-        public async Task<IEnumerable<Listing>> GetAsync()
+        public async Task<IEnumerable<ListingV2>> GetAsync()
         {
-            /*
-             * Dans le context de wordPress Listing sont des posts de type "job_listing"
-             * 
-             */
-            return await _eWenzeDbContext.PostTypes
-                .Where(pt => pt.PostType == ListingKey)
-                .Select(pt => new Listing
-                {
-                    Id = pt.Id,
-                    Title = pt.PostTitle,
-                    Description = pt.PostContent,
-                    Status = pt.PostStatus,
-                    CreationDate = pt.PostDate,
-                    ModifiedDate = pt.PostModified
-                })
-                .ToListAsync();
+            return await EWenzeDbContext.ListingV2s.ToListAsync();
         }
 
-        public async Task<Listing?> GetById(int id)
+        public async Task<ListingV2?> GetByIdAsync(int id)
         {
-            return await _eWenzeDbContext.PostTypes
-                .Where(pt => pt.PostType == ListingKey && pt.Id == id)
-                .Select(pt => new Listing
-                {
-                    Id = pt.Id,
-                    Title = pt.PostTitle,
-                    Description = pt.PostContent,
-                    Status = pt.PostStatus,
-                    CreationDate = pt.PostDate,
-                    ModifiedDate = pt.PostModified
-                })
-                .FirstOrDefaultAsync();
+            return await EWenzeDbContext.ListingV2s.FindAsync(id);
+        }
+
+        public async Task<ListingV2> CreateAsync(ListingV2 listing)
+        {
+           await EWenzeDbContext.AddAsync(listing);
+           await  EWenzeDbContext.SaveChangesAsync();
+          return listing;
+        }
+
+        public async Task UpdateAsync(ListingV2 listing)
+        {
+            EWenzeDbContext.ListingV2s.Update(listing);
+            await EWenzeDbContext.SaveChangesAsync();
         }
     }
 }

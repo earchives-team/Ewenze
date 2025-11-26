@@ -24,7 +24,7 @@ namespace Ewenze.Application.Services.Listings
 
         public async Task<Listing> GetByIdAsync(int id)
         {
-            var listingData = await _listingRepository.GetById(id);
+            var listingData = await _listingRepository.GetByIdAsync(id);
 
             if (listingData == null)
             {
