@@ -33,7 +33,6 @@ namespace Ewenze.Domain.Entities
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-        // Navigation (optionnel)
         public ICollection<ListingTypeV2>? Listings { get; set; }
     }
 }
