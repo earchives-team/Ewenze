@@ -31,7 +31,6 @@ namespace Ewenze.Infrastructure.Extensions
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IAuthService, AuthService>();
-            services.AddTransient<IUserMetaDataRepository, UserMetaDataRepository>();
             services.AddTransient<IListingTypeRepository, ListingTypeRepository>();
             services.AddTransient<IListingRepository, ListingRepository>();
             services.AddTransient<IEmailService, EmailService>();

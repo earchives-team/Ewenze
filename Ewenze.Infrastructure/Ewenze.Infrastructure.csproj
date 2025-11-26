@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Ewenze.Application\Ewenze.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\Entities\" />
+  </ItemGroup>
+
 </Project>
