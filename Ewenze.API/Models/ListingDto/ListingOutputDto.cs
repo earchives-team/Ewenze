@@ -9,6 +9,7 @@
         public string PriceCurrency { get; set; } = "EUR";
         public string? City { get; set; }
         public string? CoverImage { get; set; }
+        public List<string>? Images { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

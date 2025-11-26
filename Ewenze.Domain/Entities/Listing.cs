@@ -46,7 +46,7 @@ namespace Ewenze.Domain.Entities
         public DateTimeOffset? EndDate { get; set; }
 
         // Médias
-        public JsonObject? Images { get; set; }          // JSONB
+        public List<string>? Images { get; set; }          // JSONB
         public string? CoverImage { get; set; }
 
         // Métadonnées
@@ -55,7 +55,7 @@ namespace Ewenze.Domain.Entities
         public bool IsFeatured { get; set; } = false;
 
         // Champs dynamiques
-        public JsonObject? DynamicFields { get; set; }   // JSONB
+        //public JsonObject? DynamicFields { get; set; }   // JSONB
 
         // Statut
         public ListingStatus Status { get; set; } = ListingStatus.DRAFT;

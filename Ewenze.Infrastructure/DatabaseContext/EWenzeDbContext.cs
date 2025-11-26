@@ -1,5 +1,6 @@
 ﻿using Ewenze.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Ewenze.Infrastructure.DatabaseContext
 {
@@ -212,7 +213,13 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 // ---------- Media ----------
                 entity.Property(x => x.Images)
                        .HasColumnName("images")
-                       .HasColumnType("jsonb");
+                       .HasColumnType("jsonb")
+                       .HasConversion(
+                            v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                            v => string.IsNullOrEmpty(v)
+                                ? new List<string>()
+                                : JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions)null) ?? new List<string>()
+                       ).IsRequired(false);
 
                 entity.Property(x => x.CoverImage)
                        .HasColumnName("cover_image")
@@ -231,9 +238,9 @@ namespace Ewenze.Infrastructure.DatabaseContext
                        .HasColumnName("is_featured")
                        .HasDefaultValue(false);
 
-                entity.Property(x => x.DynamicFields)
-                       .HasColumnName("dynamic_fields")
-                       .HasColumnType("jsonb");
+                //entity.Property(x => x.DynamicFields)
+                //       .HasColumnName("dynamic_fields")
+                //       .HasColumnType("jsonb");
 
                 // ---------- Status ----------
                 entity.Property(e => e.Status)
@@ -280,8 +287,8 @@ namespace Ewenze.Infrastructure.DatabaseContext
                       .HasMethod("GIN")
                       .HasFilter("tags IS NOT NULL");
 
-                entity.HasIndex(e => e.DynamicFields)
-                      .HasMethod("GIN");
+                //entity.HasIndex(e => e.DynamicFields)
+                //      .HasMethod("GIN");
             });
 
             #endregion

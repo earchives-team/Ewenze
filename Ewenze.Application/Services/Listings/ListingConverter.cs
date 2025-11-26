@@ -34,7 +34,7 @@ namespace Ewenze.Application.Services.Listings
                 Latitude = 0.0, //listing.LocationCoordinates?.Latitude,
                 Longitude = 0.0,//listing.LocationCoordinates?.Longitude,
 
-                Images = ConvertImages(listing.Images),
+                Images = listing.Images,//ConvertImages(listing.Images),
                 CoverImage = listing.CoverImage,
 
                 Tags = listing.Tags?.ToList() ?? new List<string>(),
@@ -42,7 +42,7 @@ namespace Ewenze.Application.Services.Listings
                 StartDate = listing.StartDate?.UtcDateTime,
                 EndDate = listing.EndDate?.UtcDateTime,
 
-                Fields = ConvertDynamicFields(listing.DynamicFields),
+                Fields = null,//ConvertDynamicFields(listing.DynamicFields),
 
                 Status = listing.Status,
                 IsFeatured = listing.IsFeatured,

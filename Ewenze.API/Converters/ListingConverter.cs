@@ -19,6 +19,7 @@ namespace Ewenze.API.Converters
                 PriceCurrency = listing.PriceCurrency,
                 City = listing.City,
                 CoverImage = listing.CoverImage,
+                Images = listing.Images,
                 CreatedAt = listing.CreatedAt
             };
         }
