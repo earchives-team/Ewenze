@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Nodes;
 
 namespace Ewenze.Domain.Entities
 {
-    public  class Listing
+    public class Listing
     {
         public int Id { get; set; }
 
@@ -43,10 +37,9 @@ namespace Ewenze.Domain.Entities
         public string PriceCurrency { get; set; } = "EUR";
 
         // Localisation
-        public string? LocationCity { get; set; }
-        public string? LocationPostalCode { get; set; }
-        public string LocationCountry { get; set; } = "France";
-        public Point? LocationCoordinates { get; set; } // POINT
+        public string? City { get; set; }
+        public string? PostalCode { get; set; }
+        public string Country { get; set; } = "France";
 
         // Dates
         public DateTimeOffset? StartDate { get; set; }

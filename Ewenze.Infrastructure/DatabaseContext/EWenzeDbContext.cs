@@ -159,50 +159,104 @@ namespace Ewenze.Infrastructure.DatabaseContext
             {
                 entity.ToTable("listings");
 
-                entity.HasKey(e => e.Id);
+                // ---------- Primary key ----------
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Id)
+                       .HasColumnName("id");
 
-                // FK
-                entity.HasOne(e => e.ListingType)
-                    .WithMany()
-                    .HasForeignKey(e => e.ListingTypeId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                // ---------- Basic info ----------
+                entity.Property(x => x.Title)
+                       .HasColumnName("title")
+                       .IsRequired()
+                       .HasMaxLength(255);
 
-                entity.HasOne(e => e.User)
-                    .WithMany()
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(x => x.CategoryPath)
+                       .HasColumnName("category_path")
+                       .IsRequired()
+                       .HasMaxLength(500);
 
-                // Required
-                entity.Property(e => e.CategoryPath).IsRequired();
-                entity.Property(e => e.Title).IsRequired();
+                entity.Property(x => x.Description)
+                       .HasColumnName("description");
 
-                // Defaults
-                entity.Property(e => e.PriceCurrency).HasDefaultValue("EUR");
-                entity.Property(e => e.LocationCountry).HasDefaultValue("France");
-                entity.Property(e => e.ViewCount).HasDefaultValue(0);
-                entity.Property(e => e.IsFeatured).HasDefaultValue(false);
+                // ---------- Price ----------
+                entity.Property(x => x.Price)
+                       .HasColumnName("price")
+                       .HasColumnType("numeric(12,2)");
+
+                entity.Property(x => x.PriceCurrency)
+                       .HasColumnName("price_currency")
+                       .HasMaxLength(3)
+                       .HasDefaultValue("EUR");
+
+                // ---------- Location ----------
+                entity.Property(x => x.City)
+                       .HasColumnName("location_city")
+                       .HasMaxLength(100);
+
+                entity.Property(x => x.PostalCode)
+                       .HasColumnName("location_postal_code")
+                       .HasMaxLength(20);
+
+                entity.Property(x => x.Country)
+                       .HasColumnName("location_country")
+                       .HasMaxLength(100)
+                       .HasDefaultValue("France");
+
+                // ---------- Dates ----------
+                entity.Property(x => x.StartDate)
+                       .HasColumnName("start_date");
+
+                entity.Property(x => x.EndDate)
+                       .HasColumnName("end_date");
+
+                // ---------- Media ----------
+                entity.Property(x => x.Images)
+                       .HasColumnName("images")
+                       .HasColumnType("jsonb");
+
+                entity.Property(x => x.CoverImage)
+                       .HasColumnName("cover_image")
+                       .HasMaxLength(500);
+
+                // ---------- Metadata ----------
+                entity.Property(x => x.Tags)
+                       .HasColumnName("tags")
+                       .HasColumnType("text[]");
+
+                entity.Property(x => x.ViewCount)
+                       .HasColumnName("view_count")
+                       .HasDefaultValue(0);
+
+                entity.Property(x => x.IsFeatured)
+                       .HasColumnName("is_featured")
+                       .HasDefaultValue(false);
+
+                entity.Property(x => x.DynamicFields)
+                       .HasColumnName("dynamic_fields")
+                       .HasColumnType("jsonb");
+
+                // ---------- Status ----------
                 entity.Property(e => e.Status)
-                    .HasDefaultValue("DRAFT");
+                    .HasColumnName("status")
+                    .HasConversion<string>()
+                    .HasMaxLength(20)
+                    .HasDefaultValue(ListingStatus.DRAFT);
 
-              entity.Property(e => e.Status)
-                  .HasConversion<string>()
-                  .HasMaxLength(20)
-                  .HasDefaultValue(ListingStatus.DRAFT);
+                // ---------- Timestamps ----------
+                entity.Property(x => x.CreatedAt)
+                       .HasColumnName("created_at")
+                       .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                // JSONB
-                entity.Property(e => e.Images).HasColumnType("jsonb");
-                entity.Property(e => e.DynamicFields).HasColumnType("jsonb");
+                entity.Property(x => x.UpdatedAt)
+                       .HasColumnName("updated_at")
+                       .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                // Tags (TEXT[])
-                entity.Property(e => e.Tags).HasColumnType("text[]");
+                // ---------- Foreign Keys ----------
+                entity.Property(x => x.ListingTypeId)
+                       .HasColumnName("listing_type_id");
 
-                // POINT
-                entity.Property(e => e.LocationCoordinates).HasColumnType("point");
-
-                // Timestamp defaults handled in DB
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-                entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-
+                entity.Property(x => x.UserId)
+                       .HasColumnName("user_id");
                 // Indexes
                 entity.HasIndex(e => e.ListingTypeId);
                 entity.HasIndex(e => e.UserId);
@@ -213,7 +267,7 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 entity.HasIndex(e => e.Price)
                       .HasFilter("price IS NOT NULL");
 
-                entity.HasIndex(e => e.LocationCity)
+                entity.HasIndex(e => e.City)
                       .HasFilter("location_city IS NOT NULL");
 
                 entity.HasIndex(e => new { e.StartDate, e.EndDate })
@@ -221,10 +275,6 @@ namespace Ewenze.Infrastructure.DatabaseContext
 
                 entity.HasIndex(e => e.IsFeatured)
                       .HasFilter("is_featured = TRUE");
-
-                entity.HasIndex(e => e.LocationCoordinates)
-                      .HasMethod("GIST")
-                      .HasFilter("location_coordinates IS NOT NULL");
 
                 entity.HasIndex(e => e.Tags)
                       .HasMethod("GIN")

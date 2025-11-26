@@ -27,12 +27,12 @@ namespace Ewenze.Application.Services.Listings
                 Price = listing.Price,
                 PriceCurrency = listing.PriceCurrency,
 
-                City = listing.LocationCity,
-                PostalCode = listing.LocationPostalCode,
-                Country = listing.LocationCountry,
+                City = listing.City,
+                PostalCode = listing.PostalCode,
+                Country = listing.Country,
 
-                Latitude = listing.LocationCoordinates?.Y,
-                Longitude = listing.LocationCoordinates?.X,
+                Latitude = 0.0, //listing.LocationCoordinates?.Latitude,
+                Longitude = //listing.LocationCoordinates?.Longitude,
 
                 Images = ConvertImages(listing.Images),
                 CoverImage = listing.CoverImage,

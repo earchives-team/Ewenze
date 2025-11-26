@@ -3,15 +3,12 @@
     public class ListingOutputDto
     {
         public int Id { get; set; }
-
-        public string Title { get; set; }
-
-        public string Description { get; set; }
-
-        public string Status { get; set; }
-
-        public DateTime ModifiedDate { get; set; }
-
-        public DateTime CreationDate { get; set; }
+        public string Title { get; set; } = default!;
+        public string CategoryPath { get; set; } = default!;
+        public decimal? Price { get; set; }
+        public string PriceCurrency { get; set; } = "EUR";
+        public string? City { get; set; }
+        public string? CoverImage { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
