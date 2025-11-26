@@ -10,6 +10,7 @@
         public string? City { get; set; }
         public string? CoverImage { get; set; }
         public List<string>? Images { get; set; }
+        public Dictionary<string, object>? DynamicFields { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

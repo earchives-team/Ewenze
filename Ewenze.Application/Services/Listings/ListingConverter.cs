@@ -42,7 +42,7 @@ namespace Ewenze.Application.Services.Listings
                 StartDate = listing.StartDate?.UtcDateTime,
                 EndDate = listing.EndDate?.UtcDateTime,
 
-                Fields = null,//ConvertDynamicFields(listing.DynamicFields),
+                Fields = ConvertDynamicFields(listing.DynamicFields),
 
                 Status = listing.Status,
                 IsFeatured = listing.IsFeatured,

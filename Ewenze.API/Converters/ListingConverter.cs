@@ -20,6 +20,7 @@ namespace Ewenze.API.Converters
                 City = listing.City,
                 CoverImage = listing.CoverImage,
                 Images = listing.Images,
+                DynamicFields = listing.Fields,
                 CreatedAt = listing.CreatedAt
             };
         }

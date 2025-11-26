@@ -1,6 +1,7 @@
 ﻿using Ewenze.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Ewenze.Infrastructure.DatabaseContext
 {
@@ -238,9 +239,15 @@ namespace Ewenze.Infrastructure.DatabaseContext
                        .HasColumnName("is_featured")
                        .HasDefaultValue(false);
 
-                //entity.Property(x => x.DynamicFields)
-                //       .HasColumnName("dynamic_fields")
-                //       .HasColumnType("jsonb");
+                entity.Property(x => x.DynamicFields)
+                       .HasColumnName("dynamic_fields")
+                       .HasColumnType("jsonb")
+                       .HasConversion(
+                            v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                            v => string.IsNullOrEmpty(v)
+                                ? null
+                                : JsonSerializer.Deserialize<JsonObject>(v, (JsonSerializerOptions)null)
+                       ).IsRequired(false);
 
                 // ---------- Status ----------
                 entity.Property(e => e.Status)

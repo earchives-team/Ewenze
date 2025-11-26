@@ -2,22 +2,6 @@
 
 namespace Ewenze.Domain.Entities
 {
-    public class Listing
-    {
-        public int Id { get; set; }
-
-        public string Title { get; set; }
-
-        public string Description { get; set; }
-
-        public string Status { get; set; }
-
-        public DateTime ModifiedDate { get; set; }
-
-        public DateTime CreationDate { get; set; }
-
-    }
-
     public class ListingV2
     {
         public int Id { get; set; }
@@ -55,7 +39,7 @@ namespace Ewenze.Domain.Entities
         public bool IsFeatured { get; set; } = false;
 
         // Champs dynamiques
-        //public JsonObject? DynamicFields { get; set; }   // JSONB
+        public JsonObject? DynamicFields { get; set; }   // JSONB // Should find best way to store dynamic fields and send data
 
         // Statut
         public ListingStatus Status { get; set; } = ListingStatus.DRAFT;
