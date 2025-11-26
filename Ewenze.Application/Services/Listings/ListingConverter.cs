@@ -32,7 +32,7 @@ namespace Ewenze.Application.Services.Listings
                 Country = listing.Country,
 
                 Latitude = 0.0, //listing.LocationCoordinates?.Latitude,
-                Longitude = //listing.LocationCoordinates?.Longitude,
+                Longitude = 0.0,//listing.LocationCoordinates?.Longitude,
 
                 Images = ConvertImages(listing.Images),
                 CoverImage = listing.CoverImage,
