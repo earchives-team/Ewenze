@@ -1,23 +1,110 @@
 ﻿using Ewenze.Application.Services.Listings.Models;
+using Ewenze.Domain.Entities;
+using System.Text.Json.Nodes;
 
 namespace Ewenze.Application.Services.Listings
 {
     public class ListingConverter : IListingConverter
     {
-        public IEnumerable<Listing> Convert(IEnumerable<Domain.Entities.Listing> listings)
+        public IEnumerable<Models.Listing> Convert(IEnumerable<Domain.Entities.ListingV2> listings)
         {
             return listings.Select(l => Convert(l));
         }
-        public Listing Convert(Domain.Entities.Listing listing)
+
+        public Models.Listing Convert(ListingV2 listing)
         {
-            return new Listing
+            return new Models.Listing
             {
                 Id = listing.Id,
+
+                ListingTypeId = listing.ListingTypeId,
+                UserId = listing.UserId,
+
+                CategoryPath = listing.CategoryPath,
                 Title = listing.Title,
                 Description = listing.Description,
+
+                Price = listing.Price,
+                PriceCurrency = listing.PriceCurrency,
+
+                City = listing.LocationCity,
+                PostalCode = listing.LocationPostalCode,
+                Country = listing.LocationCountry,
+
+                Latitude = listing.LocationCoordinates?.Y,
+                Longitude = listing.LocationCoordinates?.X,
+
+                Images = ConvertImages(listing.Images),
+                CoverImage = listing.CoverImage,
+
+                Tags = listing.Tags?.ToList() ?? new List<string>(),
+
+                StartDate = listing.StartDate?.UtcDateTime,
+                EndDate = listing.EndDate?.UtcDateTime,
+
+                Fields = ConvertDynamicFields(listing.DynamicFields),
+
                 Status = listing.Status,
-                ModifiedDate = listing.ModifiedDate,
-                CreationDate = listing.CreationDate
+                IsFeatured = listing.IsFeatured,
+                ViewCount = listing.ViewCount,
+
+                CreatedAt = listing.CreatedAt.UtcDateTime,
+                UpdatedAt = listing.UpdatedAt.UtcDateTime
+            };
+        }
+
+        private List<string> ConvertImages(JsonObject? imagesJson)
+        {
+            if (imagesJson == null)
+                return new List<string>();
+
+            // JSONB contenant une liste → ["img1","img2"]
+            if (imagesJson.TryGetPropertyValue("items", out var listNode)
+                && listNode is JsonArray arr)
+            {
+                return arr
+                    .Select(x => x?.ToString() ?? "")
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .ToList();
+            }
+
+            // Sinon, transformer toutes les valeurs en string
+            return imagesJson
+                .Select(kvp => kvp.Value?.ToString() ?? "")
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .ToList();
+        }
+
+        private Dictionary<string, object>? ConvertDynamicFields(JsonObject? obj)
+        {
+            if (obj == null)
+                return null;
+
+            var dict = new Dictionary<string, object>();
+
+            foreach (var kvp in obj)
+            {
+                dict[kvp.Key] = ConvertJsonNode(kvp.Value);
+            }
+
+            return dict;
+        }
+
+        private object ConvertJsonNode(JsonNode? node)
+        {
+            return node switch
+            {
+                null => null!,
+                JsonValue v => v.TryGetValue(out int i) ? i :
+                               v.TryGetValue(out double d) ? d :
+                               v.TryGetValue(out bool b) ? b :
+                               v.ToString(),
+
+                JsonArray arr => arr.Select(ConvertJsonNode).ToList(),
+
+                JsonObject o => ConvertDynamicFields(o),
+
+                _ => node.ToString()
             };
         }
     }
