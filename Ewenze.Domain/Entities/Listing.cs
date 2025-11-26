@@ -65,7 +65,7 @@ namespace Ewenze.Domain.Entities
         public JsonObject? DynamicFields { get; set; }   // JSONB
 
         // Statut
-        public string Status { get; set; } = "DRAFT";
+        public ListingStatus Status { get; set; } = ListingStatus.DRAFT;
 
         // Timestamps
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
