@@ -1,5 +1,6 @@
 ﻿using Ewenze.API.Models.ListingDto;
 using Ewenze.Application.Services.Listings.Models;
+using Ewenze.Domain.Entities;
 
 namespace Ewenze.API.Converters
 {
@@ -52,7 +53,7 @@ namespace Ewenze.API.Converters
                 Images = dto.Images?.ToList() ?? new List<string>(),
                 CoverImage = dto.CoverImage,
 
-                Status = dto.ListingStatus,
+                Status = (ListingStatus) Enum.Parse(typeof(ListingStatus), dto.Status, true),
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
 

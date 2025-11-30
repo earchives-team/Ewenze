@@ -72,7 +72,7 @@ namespace Ewenze.Application.Services.Listings
                 Tags = listing.Tags?.ToList() ?? new List<string>(),
                 StartDate = listing.StartDate.HasValue ? DateTimeOffset.UtcNow : null,
                 EndDate = listing.EndDate.HasValue ? DateTimeOffset.UtcNow : null,
-                DynamicFields = null, // TODO: Convertir les champs dynamiques en JsonObject
+                DynamicFields = ConvertToJsonObject(listing.Fields), // TODO: Convertir les champs dynamiques en JsonObject
                 Status = listing.Status,
                 IsFeatured = listing.IsFeatured,
                 ViewCount = listing.ViewCount,
@@ -81,26 +81,45 @@ namespace Ewenze.Application.Services.Listings
             };
         }
 
-        private List<string> ConvertImages(JsonObject? imagesJson)
+        private JsonObject? ConvertToJsonObject(Dictionary<string, object>? dict)
         {
-            if (imagesJson == null)
-                return new List<string>();
+            if (dict == null)
+                return null;
 
-            // JSONB contenant une liste → ["img1","img2"]
-            if (imagesJson.TryGetPropertyValue("items", out var listNode)
-                && listNode is JsonArray arr)
+            var jsonObject = new JsonObject();
+
+            foreach (var kvp in dict)
             {
-                return arr
-                    .Select(x => x?.ToString() ?? "")
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .ToList();
+                jsonObject[kvp.Key] = ConvertToJsonNode(kvp.Value);
             }
 
-            // Sinon, transformer toutes les valeurs en string
-            return imagesJson
-                .Select(kvp => kvp.Value?.ToString() ?? "")
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .ToList();
+            return jsonObject;
+        }
+
+        private JsonNode? ConvertToJsonNode(object? value)
+        {
+            return value switch
+            {
+                null => null,
+                string s => JsonValue.Create(s),
+                int i => JsonValue.Create(i),
+                long l => JsonValue.Create(l),
+                double d => JsonValue.Create(d),
+                float f => JsonValue.Create(f),
+                decimal dec => JsonValue.Create(dec),
+                bool b => JsonValue.Create(b),
+                DateTime dt => JsonValue.Create(dt),
+                DateTimeOffset dto => JsonValue.Create(dto),
+
+                // Pour les listes/arrays
+                IEnumerable<object> list => new JsonArray(list.Select(ConvertToJsonNode).ToArray()),
+
+                // Pour les dictionnaires imbriqués
+                Dictionary<string, object> nestedDict => ConvertToJsonObject(nestedDict),
+
+                // Fallback: essayer de sérialiser en string
+                _ => JsonValue.Create(value.ToString())
+            };
         }
 
         private Dictionary<string, object>? ConvertDynamicFields(JsonObject? obj)
@@ -124,14 +143,13 @@ namespace Ewenze.Application.Services.Listings
             {
                 null => null!,
                 JsonValue v => v.TryGetValue(out int i) ? i :
+                               v.TryGetValue(out long l) ? l :
                                v.TryGetValue(out double d) ? d :
                                v.TryGetValue(out bool b) ? b :
+                               v.TryGetValue(out DateTime dt) ? dt :
                                v.ToString(),
-
                 JsonArray arr => arr.Select(ConvertJsonNode).ToList(),
-
                 JsonObject o => ConvertDynamicFields(o),
-
                 _ => node.ToString()
             };
         }

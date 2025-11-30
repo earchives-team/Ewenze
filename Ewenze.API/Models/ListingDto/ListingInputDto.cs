@@ -19,7 +19,7 @@ namespace Ewenze.API.Models.ListingDto
         public string? Country { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public ListingStatus ListingStatus { get; set; }
+        public string Status { get; set; }
 
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
