@@ -8,5 +8,6 @@ namespace Ewenze.Application.Services.Listings
         Task<IEnumerable<Listings.Models.ListingApplicationModel>> GetAllAsync();
         Task<Listings.Models.ListingApplicationModel> GetByIdAsync(int id);
         Task<int> CreateAsync(ListingApplicationModel listing);
+        Task UpdateAsync(ListingApplicationModel listing);
     }
 }

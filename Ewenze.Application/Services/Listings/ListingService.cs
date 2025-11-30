@@ -46,5 +46,20 @@ namespace Ewenze.Application.Services.Listings
 
             return listingData.Id;
         }
+
+        public async Task UpdateAsync(ListingApplicationModel listing)
+        {
+            var existingListing = await ListingRepository.GetByIdAsync(listing.Id);
+            if (existingListing == null)
+            {
+                throw new ListingException($"The Listing with id {listing.Id} was not found")
+                {
+                    Reason = ListingExceptionReason.EntityNotFound,
+                    InvalidProperty = "listingId"
+                };
+            }
+            var convertedListingV2 = ListingConverter.Convert(listing);
+            await ListingRepository.UpdateAsync(convertedListingV2);
+        }
     }
 }

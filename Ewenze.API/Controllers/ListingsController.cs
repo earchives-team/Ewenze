@@ -53,5 +53,20 @@ namespace Ewenze.API.Controllers
 
             return CreatedAtAction(nameof(GetById), new { id = result }, userConverted );
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(ListingInputDto listingInputDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var listingConverted = ListingConverter.Convert(listingInputDto);
+            await ListingService.UpdateAsync(listingConverted);
+
+
+            return NoContent(); 
+        }
     }
 }
