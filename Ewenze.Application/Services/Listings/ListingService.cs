@@ -58,6 +58,7 @@ namespace Ewenze.Application.Services.Listings
                     InvalidProperty = "listingId"
                 };
             }
+            listing.UpdatedAt = DateTime.UtcNow;
             var convertedListingV2 = ListingConverter.Convert(listing);
             await ListingRepository.UpdateAsync(convertedListingV2);
         }
@@ -74,6 +75,35 @@ namespace Ewenze.Application.Services.Listings
                 };
             }
             await ListingRepository.DeleteAsync(id);
+        }
+
+        public async Task UpdateListingStatusAsync(int id, string status)
+        {
+            var existingListing = await ListingRepository.GetByIdAsync(id);
+            if (existingListing == null)
+            {
+                throw new ListingException($"The Listing with id {id} was not found")
+                {
+                    Reason = ListingExceptionReason.EntityNotFound,
+                    InvalidProperty = "listingId"
+                };
+            }
+            var statusToUpdate = (ListingStatus)Enum.Parse(typeof(ListingStatus), status, true);
+
+            // On ne p
+            if (ListingStatus.ARCHIVE == existingListing.Status)
+            {
+                throw new ListingException($"The status {status} is not allowed to be set directly.")
+                {
+                    Reason = ListingExceptionReason.InvalidProperty,
+                    InvalidProperty = "status"
+                };
+            }
+
+            existingListing.Status = statusToUpdate;
+            existingListing.UpdatedAt = DateTime.UtcNow;
+
+            await ListingRepository.UpdateAsync(existingListing);
         }
     }
 }

@@ -10,5 +10,6 @@ namespace Ewenze.Application.Services.Listings
         Task<int> CreateAsync(ListingApplicationModel listing);
         Task UpdateAsync(ListingApplicationModel listing);
         Task DeleteAsync(int id);
+        Task UpdateListingStatusAsync(int id, string status);
     }
 }

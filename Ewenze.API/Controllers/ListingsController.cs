@@ -1,6 +1,7 @@
 ﻿using Ewenze.API.Models.ListingDto;
 using Ewenze.API.Models.ListingTypeDto;
 using Ewenze.Application.Services.Listings;
+using Ewenze.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,6 +74,19 @@ namespace Ewenze.API.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             await ListingService.DeleteAsync(id);
+            return NoContent();
+        }
+
+        [HttpPatch("{id:int}/status")]
+        public async Task<IActionResult> UpdateListingStatus(int id, [FromBody] UpdateListingStatusDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await ListingService.UpdateListingStatusAsync(id, dto.Status);
+
             return NoContent();
         }
     }
