@@ -89,5 +89,12 @@ namespace Ewenze.API.Controllers
 
             return NoContent();
         }
+
+        [HttpPatch("{id:int}/archive")]
+        public async Task<IActionResult> ArchiveListing(int id)
+        {
+            await ListingService.ArchiveAsync(id);
+            return NoContent();
+        }
     }
 }
