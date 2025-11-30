@@ -5,9 +5,9 @@ namespace Ewenze.API.Converters
 {
     public class UserConverter
     {
-        public IList<UserOutputDto> Convert(IEnumerable<User> users) => users?.Select(Convert).ToList(); 
+        public IList<UserOutputDto> Convert(IEnumerable<UserApplicationModel> users) => users?.Select(Convert).ToList(); 
 
-        public UserOutputDto Convert(User user)
+        public UserOutputDto Convert(UserApplicationModel user)
         {
             if (user == null) return null;
 
@@ -19,9 +19,9 @@ namespace Ewenze.API.Converters
             }; 
         }
 
-        public User Convert(UserInputDto userInputDto)
+        public UserApplicationModel Convert(UserInputDto userInputDto)
         {
-            return new User
+            return new UserApplicationModel
             {
                 Id = userInputDto.Id,
                 Email = userInputDto.Email,

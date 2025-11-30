@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ewenze.Application.Services.Listings.Models
 {
-    public class Listing
+    public class ListingApplicationModel
     {
         public int Id { get; set; }
 

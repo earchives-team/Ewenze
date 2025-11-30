@@ -16,14 +16,14 @@ namespace Ewenze.Application.Services.Listings
             ListingConverter = listingConverter ?? throw new ArgumentNullException(nameof(listingConverter));
         }
 
-        public async Task<IEnumerable<Listing>> GetAllAsync()
+        public async Task<IEnumerable<ListingApplicationModel>> GetAllAsync()
         {
             var listingData = await ListingRepository.GetAsync();
 
             return ListingConverter.Convert(listingData);
         }
 
-        public async Task<Listing> GetByIdAsync(int id)
+        public async Task<ListingApplicationModel> GetByIdAsync(int id)
         {
             var listingData = await ListingRepository.GetByIdAsync(id);
 
@@ -39,7 +39,7 @@ namespace Ewenze.Application.Services.Listings
             return ListingConverter.Convert(listingData);
         }
 
-        public async Task<int> CreateAsync(Listing listing)
+        public async Task<int> CreateAsync(ListingApplicationModel listing)
         {
             var convertedListingV2 = ListingConverter.Convert(listing);
             var listingData = await ListingRepository.CreateAsync(convertedListingV2);

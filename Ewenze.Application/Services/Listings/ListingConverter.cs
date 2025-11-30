@@ -6,14 +6,14 @@ namespace Ewenze.Application.Services.Listings
 {
     public class ListingConverter : IListingConverter
     {
-        public IEnumerable<Models.Listing> Convert(IEnumerable<Domain.Entities.ListingV2> listings)
+        public IEnumerable<Models.ListingApplicationModel> Convert(IEnumerable<Domain.Entities.ListingV2> listings)
         {
             return listings.Select(l => Convert(l));
         }
 
-        public Models.Listing Convert(ListingV2 listing)
+        public Models.ListingApplicationModel Convert(ListingV2 listing)
         {
-            return new Models.Listing
+            return new Models.ListingApplicationModel
             {
                 Id = listing.Id,
 
@@ -52,7 +52,7 @@ namespace Ewenze.Application.Services.Listings
                 UpdatedAt = listing.UpdatedAt.UtcDateTime
             };
         }
-        public ListingV2 Convert(Models.Listing listing)
+        public ListingV2 Convert(Models.ListingApplicationModel listing)
         {
             return new ListingV2
             {

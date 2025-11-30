@@ -15,14 +15,14 @@ namespace Ewenze.Application.Services.Users
             UserConverter = userConverter ?? throw new ArgumentNullException(nameof(userConverter));
         }
 
-        public async Task<IList<User>> GetAllAsync()
+        public async Task<IList<UserApplicationModel>> GetAllAsync()
         {
             var allUsers = await UserRepository.GetUsersAsync();
 
            return UserConverter.Convert(allUsers);
         }
 
-        public async Task<User> GetById(int userId)
+        public async Task<UserApplicationModel> GetById(int userId)
         {
             var currentUser = await UserRepository.GetUserByIdAsync(userId);
 
@@ -38,7 +38,7 @@ namespace Ewenze.Application.Services.Users
             return UserConverter.Convert(currentUser);
         }
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<UserApplicationModel> GetByEmailAsync(string email)
         {
             if(string.IsNullOrWhiteSpace(email))
                 throw new UsersException($"email cannot be null") { Reason = UsersExceptionReason.InvalidProperty, InvalidProperty = "email" };
@@ -53,7 +53,7 @@ namespace Ewenze.Application.Services.Users
             return UserConverter.Convert(currentUser);
         }
 
-        public async Task<int> CreateAsync(User user)
+        public async Task<int> CreateAsync(UserApplicationModel user)
         {
             var validator = new CreateUserValidator(this.UserRepository);
 

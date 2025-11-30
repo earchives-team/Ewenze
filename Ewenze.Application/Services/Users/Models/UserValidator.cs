@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Ewenze.Application.Services.Users.Models
 {
-    public  class CreateUserValidator : AbstractValidator<User>
+    public  class CreateUserValidator : AbstractValidator<UserApplicationModel>
     {
         private readonly IUserRepository _userRepository;
 

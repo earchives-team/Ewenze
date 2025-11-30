@@ -4,9 +4,9 @@ namespace Ewenze.Application.Services.Users
 {
     public interface IUsersService
     {
-        Task<IList<User>> GetAllAsync(); 
-        Task<User> GetById(int userId);
-        Task<User> GetByEmailAsync(string email);
-        Task<int> CreateAsync(User user); 
+        Task<IList<UserApplicationModel>> GetAllAsync(); 
+        Task<UserApplicationModel> GetById(int userId);
+        Task<UserApplicationModel> GetByEmailAsync(string email);
+        Task<int> CreateAsync(UserApplicationModel user); 
     }
 }

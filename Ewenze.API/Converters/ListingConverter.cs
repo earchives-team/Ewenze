@@ -5,9 +5,9 @@ namespace Ewenze.API.Converters
 {
     public class ListingConverter
     {
-        public IList<ListingOutputDto> Convert(IEnumerable<Listing> listings) => listings?.Select(Convert).ToList();
+        public IList<ListingOutputDto> Convert(IEnumerable<ListingApplicationModel> listings) => listings?.Select(Convert).ToList();
 
-        public ListingOutputDto Convert(Listing listing)
+        public ListingOutputDto Convert(ListingApplicationModel listing)
         {
             if (listing == null) return null;
             return new ListingOutputDto
@@ -25,12 +25,12 @@ namespace Ewenze.API.Converters
             };
         }
 
-        public Listing Convert(ListingInputDto dto)
+        public ListingApplicationModel Convert(ListingInputDto dto)
         {
             if (dto == null)
                 return null;
 
-            return new Listing
+            return new ListingApplicationModel
             {
                 ListingTypeId = dto.ListingTypeId,
                 UserId = dto.UserId,
@@ -51,6 +51,10 @@ namespace Ewenze.API.Converters
 
                 Images = dto.Images?.ToList() ?? new List<string>(),
                 CoverImage = dto.CoverImage,
+
+                Status = dto.ListingStatus,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
 
                 Tags = dto.Tags?.ToList() ?? new List<string>(),
 
