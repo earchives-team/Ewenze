@@ -1,30 +1,31 @@
 ﻿using Ewenze.Application.Services.Listings.Exceptions;
 using Ewenze.Application.Services.Listings.Models;
+using Ewenze.Domain.Entities;
 using Ewenze.Domain.Repositories;
 
 namespace Ewenze.Application.Services.Listings
 {
     public class ListingService : IListingService
     {
-        private readonly IListingRepository _listingRepository;
-        private readonly IListingConverter _listingConverter;
+        private readonly IListingRepository ListingRepository;
+        private readonly IListingConverter ListingConverter;
 
         public ListingService(IListingRepository listingRepository, IListingConverter listingConverter)
         {
-            _listingRepository = listingRepository ?? throw new ArgumentNullException(nameof(listingRepository));
-            _listingConverter = listingConverter ?? throw new ArgumentNullException(nameof(listingConverter));
+            ListingRepository = listingRepository ?? throw new ArgumentNullException(nameof(listingRepository));
+            ListingConverter = listingConverter ?? throw new ArgumentNullException(nameof(listingConverter));
         }
 
         public async Task<IEnumerable<Listing>> GetAllAsync()
         {
-            var listingData = await _listingRepository.GetAsync();
+            var listingData = await ListingRepository.GetAsync();
 
-            return _listingConverter.Convert(listingData);
+            return ListingConverter.Convert(listingData);
         }
 
         public async Task<Listing> GetByIdAsync(int id)
         {
-            var listingData = await _listingRepository.GetByIdAsync(id);
+            var listingData = await ListingRepository.GetByIdAsync(id);
 
             if (listingData == null)
             {
@@ -35,7 +36,15 @@ namespace Ewenze.Application.Services.Listings
                 };
             }
 
-            return _listingConverter.Convert(listingData);
+            return ListingConverter.Convert(listingData);
+        }
+
+        public async Task<int> CreateAsync(Listing listing)
+        {
+            var convertedListingV2 = ListingConverter.Convert(listing);
+            var listingData = await ListingRepository.CreateAsync(convertedListingV2);
+
+            return listingData.Id;
         }
     }
 }

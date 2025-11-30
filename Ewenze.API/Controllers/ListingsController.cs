@@ -1,4 +1,6 @@
-﻿using Ewenze.Application.Services.Listings;
+﻿using Ewenze.API.Models.ListingDto;
+using Ewenze.API.Models.ListingTypeDto;
+using Ewenze.Application.Services.Listings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +10,7 @@ namespace Ewenze.API.Controllers
     [ApiController]
     public class ListingsController : ControllerBase
     {
-        private readonly IListingService ListingService; 
+        private readonly IListingService ListingService;
         private readonly Converters.ListingConverter ListingConverter;
 
         public ListingsController(IListingService listingService, Converters.ListingConverter listingConverter)
@@ -34,6 +36,22 @@ namespace Ewenze.API.Controllers
             var serviceModel = await ListingService.GetByIdAsync(id);
             var outPutDtos = ListingConverter.Convert(serviceModel);
             return Ok(outPutDtos);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Create(ListingInputDto listingTypeInputDto)
+        {
+            if (ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userConverted =  ListingConverter.Convert(listingTypeInputDto);
+            var result = await ListingService.CreateAsync(userConverted);
+
+            return CreatedAtAction(nameof(GetById), new { id = result }, userConverted );
         }
     }
 }

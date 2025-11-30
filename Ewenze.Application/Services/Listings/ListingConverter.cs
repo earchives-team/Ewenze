@@ -52,6 +52,34 @@ namespace Ewenze.Application.Services.Listings
                 UpdatedAt = listing.UpdatedAt.UtcDateTime
             };
         }
+        public ListingV2 Convert(Models.Listing listing)
+        {
+            return new ListingV2
+            {
+                Id = listing.Id,
+                ListingTypeId = listing.ListingTypeId,
+                UserId = listing.UserId,
+                CategoryPath = listing.CategoryPath,
+                Title = listing.Title,
+                Description = listing.Description,
+                Price = listing.Price,
+                PriceCurrency = listing.PriceCurrency,
+                City = listing.City,
+                PostalCode = listing.PostalCode,
+                Country = listing.Country,
+                Images = listing.Images,
+                CoverImage = listing.CoverImage,
+                Tags = listing.Tags?.ToList() ?? new List<string>(),
+                StartDate = listing.StartDate.HasValue ? DateTimeOffset.UtcNow : null,
+                EndDate = listing.EndDate.HasValue ? DateTimeOffset.UtcNow : null,
+                DynamicFields = null, // TODO: Convertir les champs dynamiques en JsonObject
+                Status = listing.Status,
+                IsFeatured = listing.IsFeatured,
+                ViewCount = listing.ViewCount,
+                CreatedAt = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow
+            };
+        }
 
         private List<string> ConvertImages(JsonObject? imagesJson)
         {

@@ -28,7 +28,7 @@ namespace Ewenze.Infrastructure.Repositories
         {
            await EWenzeDbContext.AddAsync(listing);
            await  EWenzeDbContext.SaveChangesAsync();
-          return listing;
+           return listing;
         }
 
         public async Task UpdateAsync(ListingV2 listing)
