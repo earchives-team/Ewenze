@@ -8,5 +8,6 @@ namespace Ewenze.Domain.Repositories
         Task<ListingV2?> GetByIdAsync(int id);
         Task<ListingV2> CreateAsync(ListingV2 listingType);
         Task UpdateAsync(ListingV2 listingType);
+        Task DeleteAsync(int id);
     }
 }

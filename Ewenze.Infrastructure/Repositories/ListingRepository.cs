@@ -1,4 +1,6 @@
-﻿using Ewenze.Domain.Entities;
+﻿using Ewenze.Application.Services.Listings.Exceptions;
+using Ewenze.Domain.Entities;
+using Ewenze.Domain.Exceptions;
 using Ewenze.Domain.Repositories;
 using Ewenze.Infrastructure.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +35,23 @@ namespace Ewenze.Infrastructure.Repositories
 
         public async Task UpdateAsync(ListingV2 listing)
         {
+            var existingListing = await GetByIdAsync(listing.Id);
+
+            if (existingListing == null)
+            {
+                throw new ListingException($"Listing with Id {listing.Id} not found.");
+            }
             EWenzeDbContext.ListingV2s.Update(listing);
             await EWenzeDbContext.SaveChangesAsync();
+        }
+        public async Task DeleteAsync(int id)
+        {
+            var listing = await GetByIdAsync(id);
+            if (listing != null)
+            {
+                EWenzeDbContext.ListingV2s.Remove(listing);
+                await EWenzeDbContext.SaveChangesAsync();
+            }
         }
     }
 }

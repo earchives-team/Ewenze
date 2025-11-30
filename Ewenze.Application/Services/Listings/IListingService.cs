@@ -9,5 +9,6 @@ namespace Ewenze.Application.Services.Listings
         Task<Listings.Models.ListingApplicationModel> GetByIdAsync(int id);
         Task<int> CreateAsync(ListingApplicationModel listing);
         Task UpdateAsync(ListingApplicationModel listing);
+        Task DeleteAsync(int id);
     }
 }

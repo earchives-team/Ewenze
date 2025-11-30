@@ -61,5 +61,19 @@ namespace Ewenze.Application.Services.Listings
             var convertedListingV2 = ListingConverter.Convert(listing);
             await ListingRepository.UpdateAsync(convertedListingV2);
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var existingListing = await ListingRepository.GetByIdAsync(id);
+            if (existingListing == null)
+            {
+                throw new ListingException($"The Listing with id {id} was not found")
+                {
+                    Reason = ListingExceptionReason.EntityNotFound,
+                    InvalidProperty = "listingId"
+                };
+            }
+            await ListingRepository.DeleteAsync(id);
+        }
     }
 }

@@ -68,5 +68,12 @@ namespace Ewenze.API.Controllers
 
             return NoContent(); 
         }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await ListingService.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }
