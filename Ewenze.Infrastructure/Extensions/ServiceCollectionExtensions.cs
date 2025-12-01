@@ -33,6 +33,7 @@ namespace Ewenze.Infrastructure.Extensions
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IListingTypeRepository, ListingTypeRepository>();
             services.AddTransient<IListingRepository, ListingRepository>();
+            services.AddTransient<IListingFieldDefinitionRepository, ListingFieldDefinitionRepository>();
             services.AddTransient<IEmailService, EmailService>();
 
 

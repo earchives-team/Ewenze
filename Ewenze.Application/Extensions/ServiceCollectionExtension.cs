@@ -1,4 +1,5 @@
-﻿using Ewenze.Application.Services.Listings;
+﻿using Ewenze.Application.Services.ListingFieldDefition;
+using Ewenze.Application.Services.Listings;
 using Ewenze.Application.Services.ListingTypes;
 using Ewenze.Application.Services.Users;
 using FluentValidation;
@@ -29,6 +30,9 @@ namespace Ewenze.Application.Extensions
 
             services.AddTransient<IListingService, ListingService>();
             services.AddSingleton<IListingConverter, ListingConverter>();
+
+            services.AddTransient<IListingFieldDefinitionService, ListingFieldDefinitionService>();
+            services.AddSingleton<IListingFieldDefinitionConverter, ListingFieldDefinitionConverter>();
 
             return services;
         }

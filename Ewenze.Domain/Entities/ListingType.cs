@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ewenze.Domain.Entities
+﻿namespace Ewenze.Domain.Entities
 {
     public class ListingTypeV2
     {
@@ -19,6 +11,5 @@ namespace Ewenze.Domain.Entities
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-        public ICollection<ListingFieldDefinition>? FieldDefinitions { get; set; }
     }
 }

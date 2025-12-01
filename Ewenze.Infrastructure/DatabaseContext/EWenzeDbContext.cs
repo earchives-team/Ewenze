@@ -162,11 +162,6 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.HasMany(t => t.FieldDefinitions)
-                      .WithOne(f => f.ListingType)
-                      .HasForeignKey(f => f.ListingTypeId)
-                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             #endregion
@@ -315,7 +310,7 @@ namespace Ewenze.Infrastructure.DatabaseContext
 
             #endregion
 
-            #region
+            #region ListingFieldDefinition
             modelBuilder.Entity<ListingFieldDefinition>(entity =>
             {
                 entity.ToTable("listing_field_definitions");
@@ -343,6 +338,12 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 // JSONB field
                 entity.Property(e => e.Schema)
                     .HasColumnName("schema")
+                    .HasConversion(
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => string.IsNullOrEmpty(v)
+                            ? null
+                            : JsonSerializer.Deserialize<JsonObject>(v, (JsonSerializerOptions)null)
+                    )
                     .HasColumnType("jsonb")
                     .IsRequired();
 
@@ -361,10 +362,9 @@ namespace Ewenze.Infrastructure.DatabaseContext
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 // Relations
-                entity.HasOne(e => e.ListingType)
-                    .WithMany()
-                    .HasForeignKey(e => e.ListingTypeId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(l => l.ListingType)
+                      .WithMany()
+                      .HasForeignKey(l => l.ListingTypeId);
 
                 // Unique constraint on (listing_type_id, name, version)
                 entity.HasIndex(e => new { e.ListingTypeId, e.Name, e.Version })
