@@ -8,20 +8,6 @@ using System.Threading.Tasks;
 
 namespace Ewenze.Domain.Entities
 {
-    public class ListingType
-    {
-        public int Id { get; set; }
-
-        public string Title { get; set; }
-
-        public string Status { get; set; }
-
-        public DateTime ModifiedDate { get; set; }
-
-        public DateTime CreationDate { get; set; }
-
-    }
-
     public class ListingTypeV2
     {
         public int Id { get; set; }
