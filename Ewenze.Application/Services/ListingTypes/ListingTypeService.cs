@@ -6,25 +6,25 @@ namespace Ewenze.Application.Services.ListingTypes
 {
     public class ListingTypeService : IListingTypeService
     {
-        private readonly IListingTypeRepository _listingTypeRepository;
-        private readonly IListingTypeConverter _listingConverter;
+        private readonly IListingTypeRepository ListingTypeRepository;
+        private readonly IListingTypeConverter ListingConverter;
 
         public ListingTypeService(IListingTypeRepository listingTypeRepository, IListingTypeConverter listingConverter)
         {
-            _listingTypeRepository = listingTypeRepository;
-            this._listingConverter = listingConverter;
+            this.ListingTypeRepository = listingTypeRepository;
+            this.ListingConverter = listingConverter;
         }
 
-        public async Task<IEnumerable<ListingType.Models.ListingType>> GetAllListingTypesAsync()
+        public async Task<IEnumerable<ListingType.Models.ListingTypeApplicationModel>> GetAllListingTypesAsync()
         {
-            var listingData = await _listingTypeRepository.GetListingTypesAsync();
+            var listingData = await ListingTypeRepository.GetListingTypesAsync();
 
-            return _listingConverter.Convert(listingData);
+            return ListingConverter.Convert(listingData);
         }
 
-        public async Task<ListingType.Models.ListingType> GetListingTypeByIdAsync(int id)
+        public async Task<ListingType.Models.ListingTypeApplicationModel> GetListingTypeByIdAsync(int id)
         {
-            var listingData = await _listingTypeRepository.GetListingTypeById(id);
+            var listingData = await ListingTypeRepository.GetListingTypeById(id);
             if (listingData == null)
             {
                 throw new ListingTypeException($"The Listing Type with id {id} was not found")
@@ -34,7 +34,7 @@ namespace Ewenze.Application.Services.ListingTypes
                 };
             }
 
-            return _listingConverter.Convert(listingData);
+            return ListingConverter.Convert(listingData);
         }
     }
 }

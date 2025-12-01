@@ -2,7 +2,7 @@
 {
     public interface IListingTypeService
     {
-        Task<IEnumerable<ListingType.Models.ListingType>> GetAllListingTypesAsync();
-        Task<ListingType.Models.ListingType> GetListingTypeByIdAsync(int id);
+        Task<IEnumerable<ListingType.Models.ListingTypeApplicationModel>> GetAllListingTypesAsync();
+        Task<ListingType.Models.ListingTypeApplicationModel> GetListingTypeByIdAsync(int id);
     }
 }

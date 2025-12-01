@@ -19,7 +19,7 @@ namespace Ewenze.Domain.Entities
         public DateTime ModifiedDate { get; set; }
 
         public DateTime CreationDate { get; set; }
-         
+
     }
 
     public class ListingTypeV2
@@ -32,7 +32,5 @@ namespace Ewenze.Domain.Entities
 
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
-
-        public ICollection<ListingTypeV2>? Listings { get; set; }
     }
 }

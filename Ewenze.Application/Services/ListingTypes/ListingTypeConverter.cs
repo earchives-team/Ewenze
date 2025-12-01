@@ -2,23 +2,23 @@
 {
     public class ListingTypeConverter : IListingTypeConverter
     {
-        public IList<ListingType.Models.ListingType> Convert(IEnumerable<Domain.Entities.ListingType> entities)
+        public IList<ListingType.Models.ListingTypeApplicationModel> Convert(IEnumerable<Domain.Entities.ListingTypeV2> entities)
         {
             return entities.Select(entities => Convert(entities)).ToList();
         }
 
-        public ListingType.Models.ListingType Convert(Domain.Entities.ListingType entity)
+        public ListingType.Models.ListingTypeApplicationModel Convert(Domain.Entities.ListingTypeV2 entity)
         {
             if (entity == null)
                 return null;
 
-            return new ListingType.Models.ListingType
+            return new ListingType.Models.ListingTypeApplicationModel
             {
                 Id = entity.Id,
-                Title = entity.Title,
-                Status = entity.Status,
-                CreationDate = entity.CreationDate,
-                ModifiedDate = entity.ModifiedDate
+                Title = entity.Label,
+                Icon = entity.Icon,
+                CreationDate = entity.CreatedAt.UtcDateTime,
+                ModifiedDate = entity.UpdatedAt.UtcDateTime
             };
         }
     }

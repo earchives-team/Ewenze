@@ -7,23 +7,22 @@ namespace Ewenze.Infrastructure.Repositories
 {
     public class ListingTypeRepository : IListingTypeRepository
     {
-        private readonly EWenzeDbContext _eWenzeDbContext;
-        private const string ListingTypeKey = "case27_listing_type";
+        private readonly EWenzeDbContext EWenzeDbContext;
 
 
         public ListingTypeRepository(EWenzeDbContext eWenzeDbContext)
         {
-            this._eWenzeDbContext = eWenzeDbContext;
+            this.EWenzeDbContext = eWenzeDbContext;
         }
 
-        public async Task<IEnumerable<ListingType>> GetListingTypesAsync()
+        public async Task<IEnumerable<ListingTypeV2>> GetListingTypesAsync()
         {
-           throw new NotImplementedException();
+           return await EWenzeDbContext.ListingTypeV2s.ToListAsync();
         }
 
-        public async Task<ListingType?> GetListingTypeById(int id)
+        public async Task<ListingTypeV2?> GetListingTypeById(int id)
         {
-           throw new NotImplementedException();
+          return await EWenzeDbContext.ListingTypeV2s.FindAsync(id);
         }
     }
 }

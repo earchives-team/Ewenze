@@ -133,24 +133,34 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 entity.ToTable("listing_types");
 
                 entity.HasKey(e => e.Id);
+                entity.Property(x => x.Id)
+                       .HasColumnName("id");
 
                 // Required
                 entity.Property(e => e.Label)
+                    .HasColumnName("label")
                     .IsRequired();
 
                 // Unique
                 entity.HasIndex(e => e.Label)
                     .IsUnique();
 
+                entity.Property(entity => entity.Icon)
+                    .HasColumnName("icon")
+                    .HasMaxLength(100);
+
                 // Column types
                 entity.Property(e => e.Description)
+                    .HasColumnName("description")
                     .HasColumnType("text");
 
                 // Defaults (DB)
                 entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.UpdatedAt)
+                    .HasColumnName("updated_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
 

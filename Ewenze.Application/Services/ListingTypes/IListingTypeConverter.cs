@@ -2,7 +2,7 @@
 {
     public interface IListingTypeConverter
     {
-        IList<ListingType.Models.ListingType> Convert(IEnumerable<Domain.Entities.ListingType> entities);
-        ListingType.Models.ListingType Convert(Domain.Entities.ListingType entity);
+        IList<ListingType.Models.ListingTypeApplicationModel> Convert(IEnumerable<Domain.Entities.ListingTypeV2> entities);
+        ListingType.Models.ListingTypeApplicationModel Convert(Domain.Entities.ListingTypeV2 entity);
     }
 }

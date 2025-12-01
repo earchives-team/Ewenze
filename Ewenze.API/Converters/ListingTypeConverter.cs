@@ -5,9 +5,9 @@ namespace Ewenze.API.Converters
 {
     public class ListingTypeConverter
     {
-        public IList<ListingTypeOuputDto> Convert(IEnumerable<ListingType> listingTypes) => listingTypes?.Select(Convert).ToList();
+        public IList<ListingTypeOuputDto> Convert(IEnumerable<ListingTypeApplicationModel> listingTypes) => listingTypes?.Select(Convert).ToList();
 
-        public ListingTypeOuputDto Convert(ListingType listingType)
+        public ListingTypeOuputDto Convert(ListingTypeApplicationModel listingType)
         {
             if (listingType == null) return null;
 
@@ -16,16 +16,21 @@ namespace Ewenze.API.Converters
                 Id = listingType.Id,
                 CreationDate = listingType.CreationDate,
                 ModifiedDate = listingType.ModifiedDate,
-                Status = listingType.Status,
+                Label = listingType.Label,
                 Title = listingType.Title
             };
         }
 
-        public ListingType Convert(ListingTypeInputDto listingTypeInputDto)
+        public ListingTypeApplicationModel Convert(ListingTypeInputDto listingTypeInputDto)
         {
-            // Should be convert from ListingTypeInputDto to ListingType
-            // For now, inputDto is not supported in the UI, so returning a new instance
-            return new ListingType();
+            return new ListingTypeApplicationModel
+            {
+                Id = listingTypeInputDto.Id,
+                CreationDate = listingTypeInputDto.CreationDate,
+                ModifiedDate = listingTypeInputDto.ModifiedDate,
+                Label = listingTypeInputDto.Label,
+                Title = listingTypeInputDto.Title
+            };
         }
     }
 }
