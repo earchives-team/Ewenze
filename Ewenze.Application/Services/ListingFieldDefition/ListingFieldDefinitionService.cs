@@ -1,4 +1,5 @@
-﻿using Ewenze.Application.Services.ListingFieldDefition.Models;
+﻿using Ewenze.Application.Services.ListingFieldDefition.Exceptions;
+using Ewenze.Application.Services.ListingFieldDefition.Models;
 using Ewenze.Domain.Repositories;
 
 namespace Ewenze.Application.Services.ListingFieldDefition
@@ -28,9 +29,20 @@ namespace Ewenze.Application.Services.ListingFieldDefition
             return ListingFieldDefinitionConverter.Convert(listingFieldDefinitions);
         }
 
-        public Task<ListingFieldDefinitionApplicationModel> GetByIdAsync(int id)
+        public async Task<ListingFieldDefinitionApplicationModel> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var listingFieldDefinition = await ListingFieldDefinitionRepository.GetByIdAsync(id);
+
+            if (listingFieldDefinition == null)
+            {
+                throw new ListingFieldDefinitionException("Listing field definition does not exist")
+                {
+                    Reason = ListingFieldDefinitionExceptionReason.EntityNotFound,
+                    InvalidProperty = "listingFieldDefinitionId"
+                };
+            }
+
+            return ListingFieldDefinitionConverter.Convert(listingFieldDefinition);
         }
     }
 
