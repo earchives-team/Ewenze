@@ -4,13 +4,6 @@ using Ewenze.Domain.Repositories;
 
 namespace Ewenze.Application.Services.ListingFieldDefition
 {
-    public interface IListingFieldDefinitionService
-    {
-        Task<IEnumerable<ListingFieldDefinitionApplicationModel>> GetAllAsync();
-
-        Task<ListingFieldDefinitionApplicationModel> GetByIdAsync(int id);
-    }
-
     public class ListingFieldDefinitionService : IListingFieldDefinitionService
     {
         public readonly IListingFieldDefinitionRepository ListingFieldDefinitionRepository;
@@ -43,35 +36,6 @@ namespace Ewenze.Application.Services.ListingFieldDefition
             }
 
             return ListingFieldDefinitionConverter.Convert(listingFieldDefinition);
-        }
-    }
-
-    public interface IListingFieldDefinitionConverter
-    {
-        IEnumerable<ListingFieldDefinitionApplicationModel> Convert(IEnumerable<Domain.Entities.ListingFieldDefinition> listingFieldDefinitions);
-        ListingFieldDefinitionApplicationModel Convert(Domain.Entities.ListingFieldDefinition listingFieldDefinition);
-        
-    }
-
-    public class ListingFieldDefinitionConverter : IListingFieldDefinitionConverter
-    {
-        public IEnumerable<ListingFieldDefinitionApplicationModel> Convert(IEnumerable<Domain.Entities.ListingFieldDefinition> listingFieldDefinitions)
-        {
-            return listingFieldDefinitions.Select(l => Convert(l));
-        }
-        public ListingFieldDefinitionApplicationModel Convert(Domain.Entities.ListingFieldDefinition listingFieldDefinition)
-        {
-            return new ListingFieldDefinitionApplicationModel
-            {
-                Id = listingFieldDefinition.Id,
-                Name = listingFieldDefinition.Name,
-                Description = listingFieldDefinition.Description,
-                ListingTypeId = listingFieldDefinition.ListingTypeId,
-                Schema = listingFieldDefinition.Schema,
-                Version = listingFieldDefinition.Version,
-                CreatedAt = listingFieldDefinition.CreatedAt.UtcDateTime,
-                UpdatedAt = listingFieldDefinition.UpdatedAt.UtcDateTime
-            };
         }
     }
 }

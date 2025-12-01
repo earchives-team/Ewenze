@@ -1,4 +1,5 @@
-﻿using Ewenze.Application.Services.ListingFieldDefition;
+﻿using Ewenze.API.Models.ListingFieldsDefintions;
+using Ewenze.Application.Services.ListingFieldDefition;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,38 @@ namespace Ewenze.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var listingFieldDefinitions = await ListingFieldDefinitionService.GetAllAsync();
-            return Ok(listingFieldDefinitions);
+            var dto = listingFieldDefinitions.Select(listingFieldDefinition => new ListingFieldDefinitionOutputDto()
+            {
+                Id = listingFieldDefinition.Id,
+                ListingTypeId = listingFieldDefinition.ListingTypeId,
+                Name = listingFieldDefinition.Name,
+                Description = listingFieldDefinition.Description,
+                Schema = listingFieldDefinition.Schema,
+                Version = listingFieldDefinition.Version,
+                CreatedAt = listingFieldDefinition.CreatedAt,
+                UpdatedAt = listingFieldDefinition.UpdatedAt
+            });
+
+            return Ok(dto);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByIdAsync(int id)
+        {
+            var listingFieldDefinition = await ListingFieldDefinitionService.GetByIdAsync(id);
+
+            var dto = new ListingFieldDefinitionOutputDto()
+            {
+                Id = listingFieldDefinition.Id,
+                ListingTypeId = listingFieldDefinition.ListingTypeId,
+                Name = listingFieldDefinition.Name,
+                Description = listingFieldDefinition.Description,
+                Schema = listingFieldDefinition.Schema,
+                Version = listingFieldDefinition.Version,
+                CreatedAt = listingFieldDefinition.CreatedAt,
+                UpdatedAt = listingFieldDefinition.UpdatedAt
+            };
+            return Ok(dto);
         }
     }
 }
