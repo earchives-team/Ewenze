@@ -21,7 +21,14 @@ namespace Ewenze.Infrastructure.Repositories
 
         public async Task<ListingFieldDefinition?> GetByIdAsync(int id)
         {
-           return await EWenzeDbContext.ListingFieldDefinitions.FindAsync(id);
+            return await EWenzeDbContext.ListingFieldDefinitions.FindAsync(id);
+        }
+
+        public async Task<List<ListingFieldDefinition>> GetByListingTypeAsync(int listingTypeId)
+        {
+            return await EWenzeDbContext.ListingFieldDefinitions
+                .Where(lfd => lfd.ListingTypeId == listingTypeId)
+                .ToListAsync();
         }
     }
 }

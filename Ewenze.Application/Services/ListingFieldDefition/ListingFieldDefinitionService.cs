@@ -37,5 +37,11 @@ namespace Ewenze.Application.Services.ListingFieldDefition
 
             return ListingFieldDefinitionConverter.Convert(listingFieldDefinition);
         }
+
+        public async Task<IEnumerable<ListingFieldDefinitionApplicationModel>> GetByListingTypeAsync(int listingTypeId)
+        {
+            var listingFieldDefinitions = await ListingFieldDefinitionRepository.GetByListingTypeAsync(listingTypeId);
+            return ListingFieldDefinitionConverter.Convert(listingFieldDefinitions);
+        }
     }
 }

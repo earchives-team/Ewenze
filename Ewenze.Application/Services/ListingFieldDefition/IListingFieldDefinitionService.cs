@@ -7,5 +7,7 @@ namespace Ewenze.Application.Services.ListingFieldDefition
         Task<IEnumerable<ListingFieldDefinitionApplicationModel>> GetAllAsync();
 
         Task<ListingFieldDefinitionApplicationModel> GetByIdAsync(int id);
+
+        Task<IEnumerable<ListingFieldDefinitionApplicationModel>> GetByListingTypeAsync(int listingTypeId);
     }
 }

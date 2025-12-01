@@ -1,5 +1,7 @@
-﻿using Ewenze.API.Models.ListingFieldsDefintions;
+﻿using Ewenze.API.Models.ListingDto;
+using Ewenze.API.Models.ListingFieldsDefintions;
 using Ewenze.Application.Services.ListingFieldDefition;
+using Ewenze.Application.Services.Listings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,6 +52,29 @@ namespace Ewenze.API.Controllers
                 CreatedAt = listingFieldDefinition.CreatedAt,
                 UpdatedAt = listingFieldDefinition.UpdatedAt
             };
+            return Ok(dto);
+        }
+
+        [HttpGet("{id:int}/listingType")]
+        public async Task<IActionResult> GetByListingType(int id)
+        {
+            if (id <= 0)
+                return BadRequest("Invalid listing type ID.");
+
+            var listingFieldDefinitions = await ListingFieldDefinitionService.GetByListingTypeAsync(id);
+
+            var dto = listingFieldDefinitions.Select(listingFieldDefinition => new ListingFieldDefinitionOutputDto()
+            {
+                Id = listingFieldDefinition.Id,
+                ListingTypeId = listingFieldDefinition.ListingTypeId,
+                Name = listingFieldDefinition.Name,
+                Description = listingFieldDefinition.Description,
+                Schema = listingFieldDefinition.Schema,
+                Version = listingFieldDefinition.Version,
+                CreatedAt = listingFieldDefinition.CreatedAt,
+                UpdatedAt = listingFieldDefinition.UpdatedAt
+            });
+
             return Ok(dto);
         }
     }
