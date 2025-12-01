@@ -1,4 +1,5 @@
 ﻿using Ewenze.Domain.Entities;
+using System.Text.Json.Nodes;
 
 namespace Ewenze.API.Models.ListingDto
 {
@@ -28,6 +29,6 @@ namespace Ewenze.API.Models.ListingDto
         public string? CoverImage { get; set; }
 
         public List<string>? Tags { get; set; }
-        public Dictionary<string, object>? Fields { get; set; }
+        public JsonObject? Fields { get; set; }
     }
 }

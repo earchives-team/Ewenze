@@ -59,9 +59,7 @@ namespace Ewenze.API.Converters
 
                 Tags = dto.Tags?.ToList() ?? new List<string>(),
 
-                Fields = dto.Fields != null
-                    ? new Dictionary<string, object>(dto.Fields)
-                    : null
+                Fields = dto.Fields
             };
         }
     }

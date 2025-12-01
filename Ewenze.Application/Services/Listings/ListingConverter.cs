@@ -42,7 +42,7 @@ namespace Ewenze.Application.Services.Listings
                 StartDate = listing.StartDate?.UtcDateTime,
                 EndDate = listing.EndDate?.UtcDateTime,
 
-                Fields = ConvertDynamicFields(listing.DynamicFields),
+                Fields = listing.DynamicFields,
 
                 Status = listing.Status,
                 IsFeatured = listing.IsFeatured,
@@ -72,7 +72,7 @@ namespace Ewenze.Application.Services.Listings
                 Tags = listing.Tags?.ToList() ?? new List<string>(),
                 StartDate = listing.StartDate.HasValue ? DateTimeOffset.UtcNow : null,
                 EndDate = listing.EndDate.HasValue ? DateTimeOffset.UtcNow : null,
-                DynamicFields = ConvertToJsonObject(listing.Fields), // TODO: Convertir les champs dynamiques en JsonObject
+                DynamicFields = listing.Fields,
                 Status = listing.Status,
                 IsFeatured = listing.IsFeatured,
                 ViewCount = listing.ViewCount,

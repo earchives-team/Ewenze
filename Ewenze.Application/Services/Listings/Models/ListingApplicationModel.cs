@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace Ewenze.Application.Services.Listings.Models
@@ -35,7 +36,7 @@ namespace Ewenze.Application.Services.Listings.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
-        public Dictionary<string, object>? Fields { get; set; }
+        public JsonObject? Fields { get; set; }
 
         public ListingStatus Status { get; set; }
 

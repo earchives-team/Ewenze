@@ -1,4 +1,6 @@
-﻿namespace Ewenze.API.Models.ListingDto
+﻿using System.Text.Json.Nodes;
+
+namespace Ewenze.API.Models.ListingDto
 {
     public class ListingOutputDto
     {
@@ -10,7 +12,7 @@
         public string? City { get; set; }
         public string? CoverImage { get; set; }
         public List<string>? Images { get; set; }
-        public Dictionary<string, object>? DynamicFields { get; set; }
+        public JsonObject? DynamicFields { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
