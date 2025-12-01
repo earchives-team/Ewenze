@@ -12,7 +12,7 @@ namespace Ewenze.Infrastructure.DatabaseContext
         public virtual DbSet<UserV2> UserV2s { get; set; }
         public virtual DbSet<ListingTypeV2> ListingTypeV2s { get; set; }
         public virtual DbSet<ListingV2> ListingV2s { get; set; }
-
+        public virtual DbSet<ListingFieldDefinition> ListingFieldDefinitions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -162,6 +162,11 @@ namespace Ewenze.Infrastructure.DatabaseContext
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.HasMany(t => t.FieldDefinitions)
+                      .WithOne(f => f.ListingType)
+                      .HasForeignKey(f => f.ListingTypeId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             #endregion
@@ -306,6 +311,68 @@ namespace Ewenze.Infrastructure.DatabaseContext
 
                 //entity.HasIndex(e => e.DynamicFields)
                 //      .HasMethod("GIN");
+            });
+
+            #endregion
+
+            #region
+            modelBuilder.Entity<ListingFieldDefinition>(entity =>
+            {
+                entity.ToTable("listing_field_definitions");
+
+                // Primary Key
+                entity.HasKey(e => e.Id);
+
+                // Columns
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.ListingTypeId)
+                    .HasColumnName("listing_type_id")
+                    .IsRequired();
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(255)
+                    .IsRequired();
+
+                entity.Property(e => e.Description)
+                    .HasColumnName("description");
+
+                // JSONB field
+                entity.Property(e => e.Schema)
+                    .HasColumnName("schema")
+                    .HasColumnType("jsonb")
+                    .IsRequired();
+
+                entity.Property(e => e.Version)
+                    .HasColumnName("version")
+                    .HasDefaultValue(1);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasColumnType("timestamp with time zone")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnName("updated_at")
+                    .HasColumnType("timestamp with time zone")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                // Relations
+                entity.HasOne(e => e.ListingType)
+                    .WithMany()
+                    .HasForeignKey(e => e.ListingTypeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Unique constraint on (listing_type_id, name, version)
+                entity.HasIndex(e => new { e.ListingTypeId, e.Name, e.Version })
+                    .IsUnique();
+
+                // Useful indexes
+                entity.HasIndex(e => e.ListingTypeId);
+                entity.HasIndex(e => e.Name);
             });
 
             #endregion

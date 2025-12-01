@@ -1,24 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace Ewenze.Domain.Entities
 {
-    public class ListingTypeV2
+    public class ListingFieldDefinition
     {
         public int Id { get; set; }
 
-        public string Label { get; set; } = default!;
+        public int ListingTypeId { get; set; }
+
+        public string Name { get; set; } = default!;
+
         public string? Description { get; set; }
-        public string? Icon { get; set; }
+
+        // JSONB
+        public JsonObject Schema { get; set; } = new();
+
+        public int Version { get; set; } = 1;
 
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-        public ICollection<ListingFieldDefinition>? FieldDefinitions { get; set; }
+        public ListingTypeV2? ListingType { get; set; }
     }
+
 }
