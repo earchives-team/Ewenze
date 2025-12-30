@@ -7,6 +7,6 @@ namespace Ewenze.Application.Services.Users
         Task<IList<UserApplicationModel>> GetAllAsync(); 
         Task<UserApplicationModel> GetById(int userId);
         Task<UserApplicationModel> GetByEmailAsync(string email);
-        Task<int> CreateAsync(UserApplicationModel user); 
+        Task<UserApplicationModel> CreateAsync(UserApplicationModel user); 
     }
 }

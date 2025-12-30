@@ -53,7 +53,7 @@ namespace Ewenze.Application.Services.Users
             return UserConverter.Convert(currentUser);
         }
 
-        public async Task<int> CreateAsync(UserApplicationModel user)
+        public async Task<UserApplicationModel> CreateAsync(UserApplicationModel user)
         {
             var validator = new CreateUserValidator(this.UserRepository);
 
@@ -76,7 +76,12 @@ namespace Ewenze.Application.Services.Users
 
             var newUser = await UserRepository.CreateUserAsync(convertedUser); 
 
-            return convertedUser.Id; 
+            if(newUser == null)
+                throw new UsersException("User could not be created") { Reason = UsersExceptionReason.None };
+
+            
+
+            return UserConverter.Convert(newUser); 
         }
 
     }

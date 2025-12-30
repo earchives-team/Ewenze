@@ -68,7 +68,7 @@ namespace Ewenze.API.Controllers
         [AllowAnonymous] // Cette action est accessible sans authentification
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create(UserInputDto userInputDto)
+        public async Task<ActionResult> Create([FromBody]CreateUserInputDto userInputDto)
         {
             if (!ModelState.IsValid)
             {
@@ -76,9 +76,11 @@ namespace Ewenze.API.Controllers
             }
 
             var userConverted = UserConverter.Convert(userInputDto);
-            var userId = await UsersService.CreateAsync(userConverted); 
+            var createdUser = await UsersService.CreateAsync(userConverted);
+            var outPutDto = UserConverter.Convert(createdUser);
+           
 
-            return CreatedAtAction(nameof(GetUserById), new { id = userId }, userConverted);
+            return CreatedAtAction(nameof(GetUserById), new { id = outPutDto.Id }, outPutDto);
         }
     }
 }

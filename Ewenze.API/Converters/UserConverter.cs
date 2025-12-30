@@ -16,14 +16,14 @@ namespace Ewenze.API.Converters
                 Id = user.Id,
                 Email = user.Email,
                 Name = user.Name,
+                phoneNumber = user.PhoneNumber
             }; 
         }
 
-        public UserApplicationModel Convert(UserInputDto userInputDto)
+        public UserApplicationModel Convert(CreateUserInputDto userInputDto)
         {
             return new UserApplicationModel
             {
-                Id = userInputDto.Id,
                 Email = userInputDto.Email,
                 Name = userInputDto.Name,
                 PhoneNumber = userInputDto.PhoneNumber,
