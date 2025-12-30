@@ -1,5 +1,5 @@
 ﻿
-using Ewenze.Application.Services.ListingTypes.Exceptions;
+using Ewenze.Application.Exceptions;
 using Ewenze.Domain.Repositories;
 
 namespace Ewenze.Application.Services.ListingTypes
@@ -27,11 +27,7 @@ namespace Ewenze.Application.Services.ListingTypes
             var listingData = await ListingTypeRepository.GetListingTypeById(id);
             if (listingData == null)
             {
-                throw new ListingTypeException($"The Listing Type with id {id} was not found")
-                {
-                    Reason = ListingTypeExceptionReason.EntityNotFound,
-                    InvalidProperty = "userId"
-                };
+                throw new NotFoundException(nameof(id), id);
             }
 
             return ListingConverter.Convert(listingData);

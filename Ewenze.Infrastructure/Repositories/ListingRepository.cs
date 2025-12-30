@@ -1,6 +1,5 @@
-﻿using Ewenze.Application.Services.Listings.Exceptions;
+﻿using Ewenze.Application.Exceptions;
 using Ewenze.Domain.Entities;
-using Ewenze.Domain.Exceptions;
 using Ewenze.Domain.Repositories;
 using Ewenze.Infrastructure.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +38,7 @@ namespace Ewenze.Infrastructure.Repositories
 
             if (existingListing == null)
             {
-                throw new ListingException($"Listing with Id {listing.Id} not found.");
+                throw new NotFoundException("listingId", listing.Id);
             }
             EWenzeDbContext.ListingV2s.Update(listing);
             await EWenzeDbContext.SaveChangesAsync();

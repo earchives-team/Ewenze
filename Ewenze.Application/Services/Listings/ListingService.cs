@@ -1,7 +1,9 @@
-﻿using Ewenze.Application.Services.Listings.Exceptions;
+﻿using Ewenze.Application.Exceptions;
+using Ewenze.Application.Services.Listings.Exceptions;
 using Ewenze.Application.Services.Listings.Models;
 using Ewenze.Domain.Entities;
 using Ewenze.Domain.Repositories;
+using System.Reflection;
 
 namespace Ewenze.Application.Services.Listings
 {
@@ -29,11 +31,7 @@ namespace Ewenze.Application.Services.Listings
 
             if (listingData == null)
             {
-                throw new ListingException($"The Listing with id {id} was not found")
-                {
-                    Reason = ListingExceptionReason.EntityNotFound,
-                    InvalidProperty = "listingId"
-                };
+                throw new NotFoundException(nameof(id), id);
             }
 
             return ListingConverter.Convert(listingData);
@@ -52,11 +50,7 @@ namespace Ewenze.Application.Services.Listings
             var existingListing = await ListingRepository.GetByIdAsync(listing.Id);
             if (existingListing == null)
             {
-                throw new ListingException($"The Listing with id {listing.Id} was not found")
-                {
-                    Reason = ListingExceptionReason.EntityNotFound,
-                    InvalidProperty = "listingId"
-                };
+               throw new NotFoundException("listingId", listing.Id);
             }
             listing.UpdatedAt = DateTime.UtcNow;
             var convertedListingV2 = ListingConverter.Convert(listing);
@@ -68,11 +62,7 @@ namespace Ewenze.Application.Services.Listings
             var existingListing = await ListingRepository.GetByIdAsync(id);
             if (existingListing == null)
             {
-                throw new ListingException($"The Listing with id {id} was not found")
-                {
-                    Reason = ListingExceptionReason.EntityNotFound,
-                    InvalidProperty = "listingId"
-                };
+                throw new NotFoundException(nameof(id), id);
             }
             await ListingRepository.DeleteAsync(id);
         }
@@ -82,22 +72,18 @@ namespace Ewenze.Application.Services.Listings
             var existingListing = await ListingRepository.GetByIdAsync(id);
             if (existingListing == null)
             {
-                throw new ListingException($"The Listing with id {id} was not found")
-                {
-                    Reason = ListingExceptionReason.EntityNotFound,
-                    InvalidProperty = "listingId"
-                };
+                throw new NotFoundException(nameof(id), id);
             }
             var statusToUpdate = (ListingStatus)Enum.Parse(typeof(ListingStatus), status, true);
 
             // On ne p
             if (ListingStatus.ARCHIVE == existingListing.Status)
             {
-                throw new ListingException($"The status {status} is not allowed to be set directly.")
-                {
-                    Reason = ListingExceptionReason.InvalidProperty,
-                    InvalidProperty = "status"
-                };
+                throw new BadRequestException(
+                     $"The status {status} is not allowed to be set directly.",
+                     "status",
+                     $"The status {status} cannot be set directly."
+                );
             }
 
             existingListing.Status = statusToUpdate;
@@ -111,11 +97,7 @@ namespace Ewenze.Application.Services.Listings
             var existingListing = await ListingRepository.GetByIdAsync(id);
             if (existingListing == null)
             {
-                throw new ListingException($"The Listing with id {id} was not found")
-                {
-                    Reason = ListingExceptionReason.EntityNotFound,
-                    InvalidProperty = "listingId"
-                };
+                throw new NotFoundException("listingId", id);
             }
 
             if (ListingStatus.ARCHIVE == existingListing.Status)

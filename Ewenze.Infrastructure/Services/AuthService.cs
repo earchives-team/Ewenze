@@ -5,7 +5,6 @@ using Ewenze.Application.Exceptions;
 using Ewenze.Application.Models;
 using Ewenze.Application.Models.AuthModel;
 using Ewenze.Domain.Entities;
-using Ewenze.Domain.Exceptions;
 using Ewenze.Domain.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
