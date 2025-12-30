@@ -35,12 +35,10 @@ namespace Ewenze.Infrastructure.Services
         #region Login 
         public async Task<AuthResponse> Login(AuthRequest request)
         {
-
-            if (request.LoginInformation == null)
+            if (request.Email == null)
                 throw new UnauthorizedAccessException("Email or password are incorrect");
 
-            // The user can Login with the email or username 
-            var user = await _userRepository.GetUserByEmailAsync(request.LoginInformation);
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
