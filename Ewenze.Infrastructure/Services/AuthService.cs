@@ -1,11 +1,13 @@
 ﻿using BCrypt.Net;
 using Ewenze.Application.Authentication;
 using Ewenze.Application.EMailManagement;
+using Ewenze.Application.Exceptions;
 using Ewenze.Application.Models;
 using Ewenze.Application.Models.AuthModel;
-using Ewenze.Application.Services.Users.Exceptions;
 using Ewenze.Domain.Entities;
+using Ewenze.Domain.Exceptions;
 using Ewenze.Domain.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -21,13 +23,13 @@ namespace Ewenze.Infrastructure.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository UserRepository;
         private readonly JwtSettings _jwtSettings;
         private readonly IEmailService _emailService;
 
         public AuthService(IUserRepository userRepository, IOptions<JwtSettings> jwtSettings, IEmailService emailService)
         {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _jwtSettings = jwtSettings.Value;
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
@@ -38,7 +40,7 @@ namespace Ewenze.Infrastructure.Services
             if (request.Email == null)
                 throw new UnauthorizedAccessException("Email or password are incorrect");
 
-            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+            var user = await UserRepository.GetUserByEmailAsync(request.Email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
@@ -66,14 +68,10 @@ namespace Ewenze.Infrastructure.Services
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentNullException(nameof(email));
 
-            var user = await _userRepository.GetUserByEmailAsync(email);
+            var user = await UserRepository.GetUserByEmailAsync(email);
 
             if (user == null)
-                throw new UsersException("email not valid")
-                {
-                    Reason = UsersExceptionReason.EntityNotFound,
-                    InvalidProperty = "email"
-                };
+                throw new BadRequestException("Email is not valid");
 
             var otp = GenerateOTP();
             var hashedOtp = HashOTP(otp);
@@ -81,7 +79,7 @@ namespace Ewenze.Infrastructure.Services
             user.Otp = hashedOtp;
             user.OtpExpiration = DateTime.UtcNow.AddMinutes(15);
 
-            await _userRepository.UpdateUserAsync(user);
+            await UserRepository.UpdateUserAsync(user);
             await _emailService.SendPasswordResetEmailAsync(user.Email, otp);
         }
         #endregion
@@ -89,48 +87,29 @@ namespace Ewenze.Infrastructure.Services
         #region Reset Password
         public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)
         {
-            var user = await _userRepository.GetUserByEmailAsync(resetPasswordRequest.Email);
-
             if (string.IsNullOrWhiteSpace(resetPasswordRequest.Email) || string.IsNullOrWhiteSpace(resetPasswordRequest.NewPassword) || string.IsNullOrWhiteSpace(resetPasswordRequest.Otp))
-                throw new UsersException("Invalid parameters")
-                {
-                    Reason = UsersExceptionReason.InvalidProperty,
-                    InvalidProperty = "email/newPassword/otp"
-                };
-                    
+                throw new BadRequestException("Invalid parameters");
+
+            var user = await UserRepository.GetUserByEmailAsync(resetPasswordRequest.Email);
+
 
             if (user == null)
-                throw new UsersException("email not valid")
-                {
-                    Reason = UsersExceptionReason.EntityNotFound,
-                    InvalidProperty = "email"
-                };
+                throw new Application.Exceptions.NotFoundException(nameof(user), resetPasswordRequest.Email);
 
             if (user.Otp == null)
-                throw new UsersException("OTP is invalid")
-                {
-                    Reason = UsersExceptionReason.InvalidProperty,
-                    InvalidProperty = "otp"
-                };
+                throw new BadRequestException("OTP is invalid");
 
-            if(user.OtpExpiration < DateTime.UtcNow)
-                throw new UsersException("OTP has expired")
-                {
-                    Reason = UsersExceptionReason.InvalidProperty,
-                    InvalidProperty = "otp"
-                };
-
+            if (user.OtpExpiration < DateTime.UtcNow)
+                throw new BadRequestException("OTP has expired");
+              
             if (!BCrypt.Net.BCrypt.Verify(resetPasswordRequest.Otp, user.Otp))
-                throw new UsersException("OTP is invalid")
-                {
-                    Reason = UsersExceptionReason.InvalidProperty,
-                    InvalidProperty = "otp"
-                };
+                throw new BadRequestException("OTP is invalid");
+              
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(resetPasswordRequest.NewPassword);
             user.PasswordHash = hashedPassword;
 
-            await _userRepository.UpdateUserAsync(user);
+            await UserRepository.UpdateUserAsync(user);
         }
         #endregion
 

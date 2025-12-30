@@ -1,8 +1,6 @@
 ﻿using Ewenze.Application.Common.Exceptions;
 using Ewenze.Application.Services.Listings.Exceptions;
 using Ewenze.Application.Services.ListingTypes.Exceptions;
-using Ewenze.Application.Services.Users.Exceptions;
-using Ewenze.Domain.Exceptions;
 
 namespace Ewenze.API.Helpers
 {
@@ -10,7 +8,6 @@ namespace Ewenze.API.Helpers
     {
         private static readonly IDictionary<Enum, int> ReasonStatusCodeMapping = new Dictionary<Enum, int>
         {
-            { UsersExceptionReason.EntityNotFound, StatusCodes.Status404NotFound },
             { ListingExceptionReason.EntityNotFound, StatusCodes.Status404NotFound },
             { ListingTypeExceptionReason.EntityNotFound, StatusCodes.Status404NotFound },
         };

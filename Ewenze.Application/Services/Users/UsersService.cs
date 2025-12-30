@@ -1,4 +1,4 @@
-﻿using Ewenze.Application.Services.Users.Exceptions;
+﻿using Ewenze.Application.Exceptions;
 using Ewenze.Application.Services.Users.Models;
 using Ewenze.Domain.Repositories;
 
@@ -27,27 +27,21 @@ namespace Ewenze.Application.Services.Users
             var currentUser = await UserRepository.GetUserByIdAsync(userId);
 
             if (currentUser == null)
-            {
-                throw new UsersException($"The User with id {userId} was not found") 
-                {
-                    Reason = UsersExceptionReason.EntityNotFound, 
-                    InvalidProperty = "userId" 
-                };
-            }
-
+                throw new NotFoundException(nameof(userId), userId);
+            
             return UserConverter.Convert(currentUser);
         }
 
         public async Task<UserApplicationModel> GetByEmailAsync(string email)
         {
-            if(string.IsNullOrWhiteSpace(email))
-                throw new UsersException($"email cannot be null") { Reason = UsersExceptionReason.InvalidProperty, InvalidProperty = "email" };
+            if (string.IsNullOrWhiteSpace(email))
+                throw new BadRequestException("Email cannot be null");
 
             var currentUser = await UserRepository.GetUserByEmailAsync(email);
 
             if (currentUser == null)
             {
-                throw new UsersException($"The User with email {email} was not found") { Reason = UsersExceptionReason.EntityNotFound, InvalidProperty = "email" };
+                throw new NotFoundException(nameof(email), email);
             }
 
             return UserConverter.Convert(currentUser);
@@ -60,7 +54,7 @@ namespace Ewenze.Application.Services.Users
             var validationResult = validator.Validate(user);
 
             if (!validationResult.IsValid)
-                throw new UsersException("Invalid Properties", validationResult);
+                throw new BadRequestException("Invalid User Properties", validationResult);
 
             var convertedUser = new Domain.Entities.UserV2
             {
@@ -77,9 +71,7 @@ namespace Ewenze.Application.Services.Users
             var newUser = await UserRepository.CreateUserAsync(convertedUser); 
 
             if(newUser == null)
-                throw new UsersException("User could not be created") { Reason = UsersExceptionReason.None };
-
-            
+                throw new Exception();
 
             return UserConverter.Convert(newUser); 
         }

@@ -12,6 +12,14 @@ namespace Ewenze.Application.Common.Exceptions
         Enum GetReason();
     }
 
+    public abstract class ApplicationExceptionV2 : Exception
+    {
+        public abstract int StatusCode { get; }
+        public virtual IDictionary<string, string[]>? Errors => null;
+        public ApplicationExceptionV2() { }
+        public ApplicationExceptionV2(string? message) : base(message) { }
+        public ApplicationExceptionV2(string message, Exception innerException) : base(message, innerException) { }
+    }
     public class ApplicationException<TReason> : Exception, IAppExceptionWithReason where TReason : Enum
     {
         private const string ReasonKey = "AppExceptionReason";

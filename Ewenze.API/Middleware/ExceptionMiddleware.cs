@@ -1,16 +1,5 @@
 ﻿using Ewenze.API.Helpers;
-using Ewenze.Application.Exceptions;
-using Ewenze.Application.Services.Users.Exceptions;
-using Ewenze.Domain.Exceptions;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Net;
-using System.Threading.Tasks;
-
+using Ewenze.Application.Common.Exceptions;
 namespace Ewenze.API.Middleware
 {
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
@@ -41,29 +30,30 @@ namespace Ewenze.API.Middleware
 
         private static Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
-            var statusCode = ExceptionStatusCodeMapper.GetStatusCodeForException(exception);
+            int statusCode;
+            IDictionary<string, string[]>? validationErrors = null;
+
+            if (exception is ApplicationExceptionV2 appEx)
+            {
+                statusCode = appEx.StatusCode;
+                validationErrors = appEx.Errors;
+            }
+            else
+            {
+                statusCode = StatusCodes.Status500InternalServerError;
+            }
 
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = statusCode;
-
+            
             var problemDetails = new CustomProblemDetails
             {
                 Title = exception.Message,
-                Status = (int)statusCode,
+                Status = statusCode,
                 Detail = exception.InnerException?.Message,
                 Type = exception.GetType().Name,
+                ErrorDetails = validationErrors
             };
-
-
-            // Add specific errors if it's BadRequestException Can Help if someone does not put value we expected 
-            if (exception is BadRequestException badRequestEx)
-            {
-                problemDetails.ErrorDetails = badRequestEx.ValidationErrors;
-            }
-            if (exception is UsersException userEx && userEx.ValidationErrors != null)
-            {
-                problemDetails.ErrorDetails = userEx.ValidationErrors;
-            }
 
             return httpContext.Response.WriteAsJsonAsync(problemDetails);
         }

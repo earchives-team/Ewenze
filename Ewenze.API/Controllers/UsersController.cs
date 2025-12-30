@@ -1,6 +1,5 @@
 ﻿using Ewenze.API.Models.UsersDto;
 using Ewenze.Application.Services.Users;
-using Ewenze.Application.Services.Users.Exceptions;
 using Ewenze.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
