@@ -37,11 +37,14 @@ namespace Ewenze.Infrastructure.Services
         public async Task<AuthResponse> Login(AuthRequest request)
         {
             if (request.Email == null)
-                throw new UnauthorizedAccessException("Email or password are incorrect");
+                throw new BadRequestException("Email or password are incorrect");
 
             var user = await UserRepository.GetUserByEmailAsync(request.Email);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            if (user == null)
+                throw new NotFoundException(nameof(request.Email), request.Email);
+
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 throw new UnauthorizedAccessException("Email or password are incorrect");
             }
@@ -65,12 +68,12 @@ namespace Ewenze.Infrastructure.Services
         public async Task ForgotPassword(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
-                throw new ArgumentNullException(nameof(email));
+                throw new BadRequestException("Email is not valid");
 
             var user = await UserRepository.GetUserByEmailAsync(email);
 
             if (user == null)
-                throw new BadRequestException("Email is not valid");
+                throw new NotFoundException(nameof(user), email);
 
             var otp = GenerateOTP();
             var hashedOtp = HashOTP(otp);

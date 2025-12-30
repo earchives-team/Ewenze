@@ -56,6 +56,15 @@ namespace Ewenze.Application.Services.Users
             if (!validationResult.IsValid)
                 throw new BadRequestException("Invalid User Properties", validationResult);
 
+            //Current email is unique, proceed to create user
+            var currentEmail = await UserRepository.GetUserByEmailAsync(user.Email);
+            if (currentEmail != null)
+                throw new ConflictException("Email already in use");
+
+            // Birthdate should be in future
+            if (user.BirthDate.Date > DateTime.UtcNow.Date)
+                throw new BadRequestException("Birthdate cannot be in the future");
+
             var convertedUser = new Domain.Entities.UserV2
             {
                 Email = user.Email,
@@ -65,7 +74,6 @@ namespace Ewenze.Application.Services.Users
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 Birthday = user.BirthDate.Date,
-
             };
 
             var newUser = await UserRepository.CreateUserAsync(convertedUser); 
