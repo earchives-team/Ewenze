@@ -28,7 +28,7 @@ namespace Ewenze.Infrastructure.Repositories
 
         public async Task<UserV2?> GetUserByEmailAsync(string email)
         {
-            return await _eWenzeDbContext.UserV2s.FirstOrDefaultAsync(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            return await _eWenzeDbContext.UserV2s.FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<UserV2?> GetUserByIdAsync(int id)
