@@ -8,31 +8,32 @@ using System.Threading.Tasks;
 
 namespace Ewenze.Application.Services.ListingFieldDefition.Exceptions
 {
-  
-    public class ListingFieldDefinitionException : ApplicationException<ListingFieldDefinitionExceptionReason>
-    {
-        public ListingFieldDefinitionException() { }
-        public ListingFieldDefinitionException(string message) : base(message) { }
-        public ListingFieldDefinitionException(string message, Exception inner) : base(message, inner) { }
+    // Ne peut plus etre utilisee car ApplicationException n'existe plus
 
-        public ListingFieldDefinitionException(string message, ValidationResult validationErrors) : base(message)
-        {
-            Reason = ListingFieldDefinitionExceptionReason.InvalidProperty;
-            ValidationErrors = validationErrors.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToArray()
-                );
-        }
+    //public class ListingFieldDefinitionException : ApplicationException<ListingFieldDefinitionExceptionReason>
+    //{
+    //    public ListingFieldDefinitionException() { }
+    //    public ListingFieldDefinitionException(string message) : base(message) { }
+    //    public ListingFieldDefinitionException(string message, Exception inner) : base(message, inner) { }
 
-        public IDictionary<string, string[]> ValidationErrors { get; set; }
+    //    public ListingFieldDefinitionException(string message, ValidationResult validationErrors) : base(message)
+    //    {
+    //        Reason = ListingFieldDefinitionExceptionReason.InvalidProperty;
+    //        ValidationErrors = validationErrors.Errors
+    //            .GroupBy(e => e.PropertyName)
+    //            .ToDictionary(
+    //                g => g.Key,
+    //                g => g.Select(e => e.ErrorMessage).ToArray()
+    //            );
+    //    }
 
-    }
-    public enum ListingFieldDefinitionExceptionReason
-    {
-        None,
-        EntityNotFound,
-        InvalidProperty
-    }
+    //    public IDictionary<string, string[]> ValidationErrors { get; set; }
+
+    //}
+    //public enum ListingFieldDefinitionExceptionReason
+    //{
+    //    None,
+    //    EntityNotFound,
+    //    InvalidProperty
+    //}
 }

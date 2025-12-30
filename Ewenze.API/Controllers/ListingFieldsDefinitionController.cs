@@ -55,7 +55,7 @@ namespace Ewenze.API.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("{id:int}/listingType")]
+        [HttpGet("listingType/{id:int}")]
         public async Task<IActionResult> GetByListingType(int id)
         {
             if (id <= 0)

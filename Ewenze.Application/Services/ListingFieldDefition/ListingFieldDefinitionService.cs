@@ -1,4 +1,5 @@
-﻿using Ewenze.Application.Services.ListingFieldDefition.Exceptions;
+﻿using Ewenze.Application.Exceptions;
+using Ewenze.Application.Services.ListingFieldDefition.Exceptions;
 using Ewenze.Application.Services.ListingFieldDefition.Models;
 using Ewenze.Domain.Repositories;
 
@@ -28,11 +29,7 @@ namespace Ewenze.Application.Services.ListingFieldDefition
 
             if (listingFieldDefinition == null)
             {
-                throw new ListingFieldDefinitionException("Listing field definition does not exist")
-                {
-                    Reason = ListingFieldDefinitionExceptionReason.EntityNotFound,
-                    InvalidProperty = "listingFieldDefinitionId"
-                };
+                throw new NotFoundException(nameof(id), id);
             }
 
             return ListingFieldDefinitionConverter.Convert(listingFieldDefinition);
