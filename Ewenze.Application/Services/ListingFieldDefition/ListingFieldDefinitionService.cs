@@ -38,6 +38,9 @@ namespace Ewenze.Application.Services.ListingFieldDefition
         public async Task<IEnumerable<ListingFieldDefinitionApplicationModel>> GetByListingTypeAsync(int listingTypeId)
         {
             var listingFieldDefinitions = await ListingFieldDefinitionRepository.GetByListingTypeAsync(listingTypeId);
+            if (listingFieldDefinitions == null)
+                throw new NotFoundException(nameof(listingTypeId), listingTypeId);
+
             return ListingFieldDefinitionConverter.Convert(listingFieldDefinitions);
         }
     }
